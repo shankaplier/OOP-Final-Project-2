@@ -10,44 +10,67 @@ public class Lexer {
     {
         Map<String, Object> LexedArguments = new HashMap<>();
         int TokenCount = 0;
-        String[] Tokens = input.split(" ");
-        for (int i = 0; i < Tokens.length; i++)
+        String[] tokenList = input.split(" ");
+        for (int i = 0; i < tokenList.length; i++)
         {
-            //If the token contains 3 or more flags
-            if(Tokens[i].startsWith("---"))
+            int numberOfFlags = characterCounter('-', tokenList[i]);
+            //If the token contains 3 or more '-'s
+            if(numberOfFlags >= 3)
             {
-                return new Result.Failure<>("Invalid argument : " + Tokens[i] + "contains more than 2 '-'");
+                String additionalComments = "";
+                if(tokenList[i].substring(numberOfFlags).isEmpty())
+                {
+                    additionalComments = " Please give a non empty flag";
+                }
+                System.out.println(characterCounter('-', tokenList[i]));
+                return new Result.Failure<>("Invalid argument : " + tokenList[i] + " contains more than 2 '-'." + additionalComments);
             }
-            //If the token that's being read is a flag
-            else if (Tokens[i].startsWith("--")) {
+            //If the token that's being read has 2 '-'s
+            else if (numberOfFlags == 2)
+            {
+                String flagName = tokenList[i].substring(2);
+                if (flagName.isEmpty())
+                {
+                    return new Result.Failure<>("Invalid argument : The flag " + tokenList[i] + " is empty. Please give a non empty flag.");
+                }
                 //Check if the token is already in our map of tokens
-                if (LexedArguments.containsKey(Tokens[i])) {
+                if (LexedArguments.containsKey(flagName)) {
                     //If the token is present throw an error
-                    return new Result.Failure<>("The token" + Tokens[i] + "has been already initialized. Do not initialize it again.");
+                    return new Result.Failure<>("The flag " + tokenList[i] + " has been already initialized. Do not initialize it again.");
                 } else {
                     //The token does not exist check the next value
                     //If the next token is a flag
-                    if (i < Tokens.length - 1 && Tokens[i + 1].startsWith("-")) {
+                    if (i < tokenList.length - 1 && characterCounter('-', tokenList[i + 1]) >= 2) {
                         //The next token is a flag which is incorrect
-                        return new Result.Failure<>("The token" + Tokens[i] + "is followed by another flag" + Tokens[i + 1] + "instead of an argument.");
+                        return new Result.Failure<>("The flag " + tokenList[i] + " is given a value of " + tokenList[i + 1] + " which has more than 1 '-'. Please give a value that has no more than 1 '-'.");
                     }
                     //If the next token is not a flag
-                    else if (i < Tokens.length - 1 && !Tokens[i + 1].startsWith("-")) {
-                        String flagName = Tokens[i].substring(2);
-                        String flagValue = Tokens[i + 1];
+                    else if (i < tokenList.length - 1 && characterCounter('-', tokenList[i + 1]) <= 1) {
+
+                        String flagValue = tokenList[i+1];
+                        //If the token starts with "-" then remove it
+                        if (flagValue.startsWith("-")) {
+                            if (flagValue.matches("-?\\d+"))
+                            {
+                                flagValue = flagValue.substring(1);
+                            }
+                        }
+                        if (flagValue.equals("-"))
+                        {
+                            return new Result.Failure<>("The flag " + tokenList[i] + " was not given an argument, Please provide an argument");
+                        }
                         LexedArguments.put(flagName, flagValue);
                         TokenCount++;
                         i++;
                     } else {
-                        return new Result.Failure<>("the flag" + Tokens[i] + "was not given an argument, Please provide an argument");
+                        return new Result.Failure<>("the flag " + tokenList[i] + " was not given an argument, Please provide an argument");
                     }
-
                 }
             }
             //If token starts with "-" or not
             else
             {
-                String Token = Tokens[i];
+                String Token = tokenList[i];
                 //If the token starts with "-" then remove it
                 if (Token.startsWith("-")) {
                     if (Token.matches("-?\\d+"))
@@ -55,10 +78,27 @@ public class Lexer {
                         Token = Token.substring(1);
                     }
                 }
+                if (Token.equals("-"))
+                {
+                    return new Result.Failure<>("Please provide a non empty literal");
+                }
                 LexedArguments.put(String.valueOf(TokenCount), Token);
                 TokenCount++;
             }
         }
         return new Result.Success<>(LexedArguments);
+    }
+
+    private static int characterCounter(Character character, String textToBeSearched)
+    {
+        int numberOfTimesAppeared = 0;
+        for(int i = 0; i < textToBeSearched.length(); i++)
+        {
+            if (textToBeSearched.charAt(i) == character)
+            {
+                numberOfTimesAppeared++;
+            }
+        }
+        return numberOfTimesAppeared;
     }
 }
