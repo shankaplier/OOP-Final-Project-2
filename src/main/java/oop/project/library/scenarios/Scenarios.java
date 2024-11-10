@@ -1,7 +1,9 @@
 package oop.project.library.scenarios;
 
-import java.util.Map;
 import oop.project.library.lexer.Lexer;
+import oop.project.library.parsing.IntegerParser;
+
+import java.util.Map;
 
 public class Scenarios {
 
@@ -41,7 +43,21 @@ public class Scenarios {
         //var left = IntegerParser.parse(args.positional[0]);
         //This is fine - our goal right now is to implement this functionality
         //so we can build up the actual command system in Part 3.
-        throw new UnsupportedOperationException("TODO"); //TODO
+        return Lexer.parse(arguments).bind(lexed -> {
+            var unparsedLeft = (String) lexed.remove("0");
+            if (unparsedLeft == null) return new Result.Failure<>("Missing left");
+            return IntegerParser.parse(unparsedLeft).bind(left -> {
+                var unparsedRight = (String) lexed.remove("1");
+                if (unparsedRight == null) return new Result.Failure<>("Missing Right");
+                return IntegerParser.parse(unparsedRight).bind(right -> {
+                    if (!lexed.isEmpty()) {
+                        return new Result.Failure<>("Extra args");
+                    } else {
+                        return new Result.Success<>(Map.of("left", left, "right", right));
+                    }
+                });
+            });
+        });
     }
 
     private static Result<Map<String, Object>> sub(String arguments) {
