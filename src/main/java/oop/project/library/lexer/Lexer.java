@@ -73,7 +73,7 @@ public class Lexer {
                 String Token = tokenList[i];
                 //If the token starts with "-" then remove it
                 if (Token.startsWith("-")) {
-                    if (Token.matches("-?\\d+"))
+                    if (!Token.matches("-?\\d+.?\\d*"))
                     {
                         Token = Token.substring(1);
                     }

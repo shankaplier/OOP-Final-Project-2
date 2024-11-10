@@ -28,6 +28,9 @@ class ScenariosTests {
             Arguments.of("Negative Decimal", """
                 lex -2.0
                 """, Map.of("0", "-2.0")),
+                Arguments.of("Negative Integer", """
+                lex -2
+                """, Map.of("0", "-2")),
             Arguments.of("Flag", """
                 lex --flag value
                 """, Map.of("flag", "value")),
