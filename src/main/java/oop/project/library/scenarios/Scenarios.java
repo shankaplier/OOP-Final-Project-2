@@ -50,13 +50,9 @@ public class Scenarios {
             return IntegerParser.parse(unparsedLeft).bind(left -> {
                 var unparsedRight = (String) lexed.remove("1");
                 if (unparsedRight == null) return new Result.Failure<>("Missing Right");
-                return IntegerParser.parse(unparsedRight).bind(right -> {
-                    if (!lexed.isEmpty()) {
-                        return new Result.Failure<>("Extra args");
-                    } else {
-                        return new Result.Success<>(Map.of("left", left, "right", right));
-                    }
-                });
+                return IntegerParser.parse(unparsedRight)
+                        .guard("Extra args", _ -> lexed.isEmpty())
+                        .map(right -> Map.of("left", left, "right", right));
             });
         });
     }
@@ -68,13 +64,9 @@ public class Scenarios {
             return DoubleParser.parse(unparsedLeft).bind(left -> {
                 var unparsedRight = (String) lexed.remove("right");
                 if (unparsedRight == null) return new Result.Failure<>("Missing Right");
-                return DoubleParser.parse(unparsedRight).bind(right -> {
-                    if (!lexed.isEmpty()) {
-                        return new Result.Failure<>("Extra args");
-                    } else {
-                        return new Result.Success<>(Map.of("left", left, "right", right));
-                    }
-                });
+                return DoubleParser.parse(unparsedRight)
+                        .guard("Extra args", _ -> lexed.isEmpty())
+                        .map(right -> Map.of("left", left, "right", right));
             });
         });
     }
@@ -86,7 +78,13 @@ public class Scenarios {
         //the validation involved even if it's not in the library yet.
         //var number = IntegerParser.parse(lexedArguments.get("number"));
         //if (number < 1 || number > 100) ...
-        throw new UnsupportedOperationException("TODO"); //TODO
+        return Lexer.parse(arguments).bind(lexed -> {
+            var fizz = (String) lexed.remove("0");
+            if (fizz == null) return new Result.Failure<>("Missing arg");
+            return IntegerParser.parse(fizz)
+                    .guard("Invalid num", x -> 1 <= x && x <= 100)
+                    .bind(buzz -> new Result.Success<>(Map.of("number", buzz)));
+        });
     }
 
     private static Result<Map<String, Object>> difficulty(String arguments) {
