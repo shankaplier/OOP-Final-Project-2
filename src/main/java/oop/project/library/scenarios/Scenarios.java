@@ -1,6 +1,7 @@
 package oop.project.library.scenarios;
 
 import oop.project.library.lexer.Lexer;
+import oop.project.library.parsing.DoubleParser;
 import oop.project.library.parsing.IntegerParser;
 
 import java.util.Map;
@@ -61,7 +62,21 @@ public class Scenarios {
     }
 
     private static Result<Map<String, Object>> sub(String arguments) {
-        throw new UnsupportedOperationException("TODO"); //TODO
+        return Lexer.parse(arguments).bind(lexed -> {
+            var unparsedLeft = (String) lexed.remove("left");
+            if (unparsedLeft == null) return new Result.Failure<>("Missing left");
+            return DoubleParser.parse(unparsedLeft).bind(left -> {
+                var unparsedRight = (String) lexed.remove("right");
+                if (unparsedRight == null) return new Result.Failure<>("Missing Right");
+                return DoubleParser.parse(unparsedRight).bind(right -> {
+                    if (!lexed.isEmpty()) {
+                        return new Result.Failure<>("Extra args");
+                    } else {
+                        return new Result.Success<>(Map.of("left", left, "right", right));
+                    }
+                });
+            });
+        });
     }
 
     private static Result<Map<String, Object>> fizzbuzz(String arguments) {
