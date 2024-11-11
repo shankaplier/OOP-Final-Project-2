@@ -1,9 +1,9 @@
 package oop.project.library.parsing;
 
-public class DoubleParser {
-    public static Double parse(String input) {
+public class BooleanParser {
+    public static Boolean parse(String input) {
         try {
-            return Double.parseDouble(input);
+            return Boolean.parseBoolean(input);
         } catch (Exception e) {
             throw new ParseException(e.getMessage());
         }

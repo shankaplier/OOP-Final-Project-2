@@ -1,7 +1,5 @@
 package oop.project.library.parsing;
 
-import oop.project.library.scenarios.Result;
-
 public class IntegerParser {
     public static Integer parse(String input) {
         try {

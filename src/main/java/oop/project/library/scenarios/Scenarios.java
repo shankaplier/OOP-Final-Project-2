@@ -1,6 +1,7 @@
 package oop.project.library.scenarios;
 
 import oop.project.library.lexer.Lexer;
+import oop.project.library.parsing.BooleanParser;
 import oop.project.library.parsing.DoubleParser;
 import oop.project.library.parsing.IntegerParser;
 import oop.project.library.parsing.StringParser;
@@ -175,7 +176,26 @@ public class Scenarios {
     }
 
     private static Result<Map<String, Object>> search(String arguments) {
-        throw new UnsupportedOperationException("TODO"); //TODO
+        var lexed = Lexer.parse(arguments);
+        switch (lexed) {
+            case Result.Failure<Map<String, Object>> v -> {
+                return new Result.Failure<>(v.error());
+            }
+            case Result.Success<Map<String, Object>> v -> {
+                var args = v.value();
+                var unparsedTerm = (String) args.remove("0");
+                var unparsedCase = (String) args.remove("case-insensitive");
+                if (unparsedTerm == null) {
+                    return new Result.Failure<>("Missing arg");
+                }
+                var term = StringParser.parse(unparsedTerm);
+                var caseSensitivity = unparsedCase != null ? BooleanParser.parse(unparsedCase) : false;
+                if (!args.isEmpty()) {
+                    return new Result.Failure<>("Too many args");
+                }
+                return new Result.Success<>(Map.of("term", term, "case-insensitive", caseSensitivity));
+            }
+        }
     }
 
     private static Result<Map<String, Object>> weekday(String arguments) {
