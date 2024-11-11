@@ -154,7 +154,24 @@ public class Scenarios {
     }
 
     private static Result<Map<String, Object>> echo(String arguments) {
-        throw new UnsupportedOperationException("TODO"); //TODO
+        var lexed = Lexer.parse(arguments);
+        switch (lexed) {
+            case Result.Failure<Map<String, Object>> v -> {
+                return new Result.Failure<>(v.error());
+            }
+            case Result.Success<Map<String, Object>> v -> {
+                var args = v.value();
+                var unparsedMessage = args.remove("0");
+                if (unparsedMessage == null) {
+                    return new Result.Success<>(Map.of("message", "Echo, echo, echo..."));
+                }
+                var message = StringParser.parse((String) unparsedMessage);
+                if (!args.isEmpty()) {
+                    return new Result.Failure<>("Too many args");
+                }
+                return new Result.Success<>(Map.of("message", message));
+            }
+        }
     }
 
     private static Result<Map<String, Object>> search(String arguments) {
