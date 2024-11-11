@@ -1,11 +1,9 @@
 package oop.project.library.scenarios;
 
 import oop.project.library.lexer.Lexer;
-import oop.project.library.parsing.BooleanParser;
-import oop.project.library.parsing.DoubleParser;
-import oop.project.library.parsing.IntegerParser;
-import oop.project.library.parsing.StringParser;
+import oop.project.library.parsing.*;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 public class Scenarios {
@@ -199,7 +197,28 @@ public class Scenarios {
     }
 
     private static Result<Map<String, Object>> weekday(String arguments) {
-        throw new UnsupportedOperationException("TODO"); //TODO
+        var lexed = Lexer.parse(arguments);
+        switch (lexed) {
+            case Result.Failure<Map<String, Object>> v -> {
+                return new Result.Failure<>(v.error());
+            }
+            case Result.Success<Map<String, Object>> v -> {
+                var args = v.value();
+                var unparsedDate = (String) args.remove("0");
+                if (unparsedDate == null) {
+                    return new Result.Failure<>("Missing arg");
+                }
+                try {
+                    var date = CustomParser.parse(LocalDate::parse, unparsedDate);
+                    if (!args.isEmpty()) {
+                        return new Result.Failure<>("Missing arg");
+                    }
+                    return new Result.Success<>(Map.of("date", date));
+                } catch (Exception e) {
+                    return new Result.Failure<>(e.getMessage());
+                }
+            }
+        }
     }
 
 }
