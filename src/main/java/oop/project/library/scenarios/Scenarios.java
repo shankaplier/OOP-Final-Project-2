@@ -140,10 +140,13 @@ public class Scenarios {
                 if (difficulty == null) {
                     return new Result.Failure<>("Missing arg");
                 }
-                if (difficulty.equals("easy") || difficulty.equals("normal") || difficulty.equals("hard") || difficulty.equals("peaceful")) {
-                    return new Result.Success<>(Map.of("difficulty", difficulty));
+                if (!(difficulty.equals("easy") || difficulty.equals("normal") || difficulty.equals("hard") || difficulty.equals("peaceful"))) {
+                    return new Result.Failure<>("Invalid difficulty");
                 }
-                return new Result.Failure<>("Invalid difficulty");
+                if (!args.isEmpty()) {
+                    return new Result.Failure<>("Too many args");
+                }
+                return new Result.Success<>(Map.of("difficulty", difficulty));
             }
         }
     }
