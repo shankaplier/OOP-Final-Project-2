@@ -3,6 +3,7 @@ package oop.project.library.scenarios;
 import oop.project.library.lexer.Lexer;
 import oop.project.library.parsing.DoubleParser;
 import oop.project.library.parsing.IntegerParser;
+import oop.project.library.parsing.StringParser;
 
 import java.util.Map;
 
@@ -136,10 +137,11 @@ public class Scenarios {
             }
             case Result.Success<Map<String, Object>> v -> {
                 var args = v.value();
-                var difficulty = args.remove("0");
-                if (difficulty == null) {
+                var unparsedDifficulty = (String) args.remove("0");
+                if (unparsedDifficulty == null) {
                     return new Result.Failure<>("Missing arg");
                 }
+                var difficulty = StringParser.parse(unparsedDifficulty);
                 if (!(difficulty.equals("easy") || difficulty.equals("normal") || difficulty.equals("hard") || difficulty.equals("peaceful"))) {
                     return new Result.Failure<>("Invalid difficulty");
                 }
