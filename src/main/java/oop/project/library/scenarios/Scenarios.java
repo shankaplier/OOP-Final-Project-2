@@ -129,7 +129,23 @@ public class Scenarios {
     }
 
     private static Result<Map<String, Object>> difficulty(String arguments) {
-        throw new UnsupportedOperationException("TODO"); //TODO
+        var lexed = Lexer.parse(arguments);
+        switch (lexed) {
+            case Result.Failure<Map<String, Object>> v -> {
+                return new Result.Failure<>(v.error());
+            }
+            case Result.Success<Map<String, Object>> v -> {
+                var args = v.value();
+                var difficulty = args.remove("0");
+                if (difficulty == null) {
+                    return new Result.Failure<>("Missing arg");
+                }
+                if (difficulty.equals("easy") || difficulty.equals("normal") || difficulty.equals("hard") || difficulty.equals("peaceful")) {
+                    return new Result.Success<>(Map.of("difficulty", difficulty));
+                }
+                return new Result.Failure<>("Invalid difficulty");
+            }
+        }
     }
 
     private static Result<Map<String, Object>> echo(String arguments) {
