@@ -34,6 +34,18 @@ class ScenariosTests {
             Arguments.of("Flag", """
                 lex --flag value
                 """, Map.of("flag", "value")),
+            Arguments.of("flag with dashes", """
+                lex --flag-with-dash value
+                """, Map.of("flag-with-dash", "value")),
+            Arguments.of("flag with negative int", """
+                lex --flag -2
+                """, Map.of("flag", "-2")),
+            Arguments.of("No arguments", """
+                lex
+                """, Map.of()),
+            Arguments.of("Date argument", """
+                lex 2024-10-23
+                """, Map.of("0", "2024-10-23")),
             Arguments.of("Flag Without Value", """
                 lex --flag
                 """, null)
