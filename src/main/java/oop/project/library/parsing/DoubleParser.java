@@ -3,11 +3,11 @@ package oop.project.library.parsing;
 import oop.project.library.scenarios.Result;
 
 public class DoubleParser {
-    public static Result<Double> parse(String input) {
+    public static Double parse(String input) {
         try {
-            return new Result.Success<>(Double.parseDouble(input));
+            return Double.parseDouble(input);
         } catch (Exception e) {
-            return new Result.Failure<>(e.getMessage());
+            throw new ParseException(e.getMessage());
         }
     }
 }
