@@ -162,7 +162,7 @@ public class Scenarios {
                 var args = v.value();
                 var unparsedMessage = args.remove("0");
                 if (unparsedMessage == null) {
-                    return new Result.Success<>(Map.of("message", "Echo, echo, echo..."));
+                    return new Result.Success<>(Map.of("message", "Echo, echo, echo!"));
                 }
                 var message = StringParser.parse((String) unparsedMessage);
                 if (!args.isEmpty()) {
