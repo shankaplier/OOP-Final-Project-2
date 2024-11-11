@@ -205,7 +205,7 @@ class ScenariosTests {
     }
 
     private static void test(String command, Map<String, Object> expected) {
-        var result = Scenarios.parse(command.stripTrailing()); //trailing newline
+        var result = Scenarios. parse(command.stripTrailing()); //trailing newline
         if (expected != null) {
             Assertions.assertEquals(new Result.Success<>(expected), result);
         } else {

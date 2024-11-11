@@ -11,6 +11,10 @@ public class Lexer {
         Map<String, Object> LexedArguments = new HashMap<>();
         int TokenCount = 0;
         String[] tokenList = input.split(" ");
+        if(tokenList[0] == "")
+        {
+            return new Result.Success<>(LexedArguments);
+        }
         for (int i = 0; i < tokenList.length; i++)
         {
             int numberOfFlags = characterCounter('-', tokenList[i]);
@@ -50,7 +54,7 @@ public class Lexer {
                         String flagValue = tokenList[i+1];
                         //If the token starts with "-" then remove it
                         if (flagValue.startsWith("-")) {
-                            if (flagValue.matches("-?\\d+"))
+                            if (!flagValue.matches("-?\\d+.?\\d*"))
                             {
                                 flagValue = flagValue.substring(1);
                             }
@@ -97,6 +101,10 @@ public class Lexer {
             if (textToBeSearched.charAt(i) == character)
             {
                 numberOfTimesAppeared++;
+            }
+            else
+            {
+                break;
             }
         }
         return numberOfTimesAppeared;
