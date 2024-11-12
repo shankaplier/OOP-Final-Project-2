@@ -30,13 +30,18 @@ public class Scenarios {
         };
     }
 
-    private static Result<Map<String, Object>> lex(String arguments) throws Exception{
+    private static Result<Map<String, Object>> lex(String arguments) {
         //Note: For ease of testing, this should use your Lexer implementation
         //directly rather and return those values.
-        return new Result.Success<>(Lexer.parse(arguments));
+        try {
+
+            return new Result.Success<>(Lexer.parse(arguments));
+        } catch (Exception e) {
+            return new Result.Failure<>(e.getMessage());
+        }
     }
 
-    private static Result<Map<String, Object>> add(String arguments) throws Exception {
+    private static Result<Map<String, Object>> add(String arguments) {
         //Note: For this part of the project, we're focused on lexing/parsing.
         //The implementation of these scenarios isn't going to look like a full
         //command, but rather some weird hodge-podge mix. For example:
@@ -44,181 +49,140 @@ public class Scenarios {
         //var left = IntegerParser.parse(args.positional[0]);
         //This is fine - our goal right now is to implement this functionality
         //so we can build up the actual command system in Part 3.
-        var lexed = Lexer.parse(arguments);
-        switch (lexed) {
-            case Result.Failure<Map<String, Object>> v -> {
-                return new Result.Failure<>(v.error());
+        try {
+            var args = Lexer.parse(arguments);
+            var unparsedRight = (String) args.remove("1");
+            var unparsedLeft = (String) args.remove("0");
+            if (unparsedLeft == null || unparsedRight == null) {
+                return new Result.Failure<>("Missing arguments");
             }
-            case Result.Success<Map<String, Object>> v -> {
-                var args = v.value();
-                var unparsedRight = (String) args.remove("1");
-                var unparsedLeft = (String) args.remove("0");
-                if (unparsedLeft == null || unparsedRight == null) {
-                    return new Result.Failure<>("Missing arguments");
-                }
-                if (!args.isEmpty()) {
-                    return new Result.Failure<>("Too many arguments");
-                }
-                try {
-                    var right = IntegerParser.parse(unparsedRight);
-                    var left = IntegerParser.parse(unparsedLeft);
-                    return new Result.Success<>(Map.of("left", left, "right", right));
-                } catch (Exception e) {
-                    return new Result.Failure<>(e.getMessage());
-                }
+            if (!args.isEmpty()) {
+                return new Result.Failure<>("Too many arguments");
             }
+            try {
+                var right = IntegerParser.parse(unparsedRight);
+                var left = IntegerParser.parse(unparsedLeft);
+                return new Result.Success<>(Map.of("left", left, "right", right));
+            } catch (Exception e) {
+                return new Result.Failure<>(e.getMessage());
+            }
+        } catch (Exception e) {
+            return new Result.Failure<>(e.getMessage());
         }
     }
 
-    private static Result<Map<String, Object>> sub(String arguments) throws Exception {
-        var lexed = Lexer.parse(arguments);
-        switch (lexed) {
-            case Result.Failure<Map<String, Object>> v -> {
-                return new Result.Failure<>(v.error());
+    private static Result<Map<String, Object>> sub(String arguments) {
+        try {
+            var args = Lexer.parse(arguments);
+            var unparsedRight = (String) args.remove("right");
+            var unparsedLeft = (String) args.remove("left");
+            if (unparsedLeft == null || unparsedRight == null) {
+                return new Result.Failure<>("Missing arguments");
             }
-            case Result.Success<Map<String, Object>> v -> {
-                var args = v.value();
-                var unparsedRight = (String) args.remove("right");
-                var unparsedLeft = (String) args.remove("left");
-                if (unparsedLeft == null || unparsedRight == null) {
-                    return new Result.Failure<>("Missing arguments");
-                }
-                if (!args.isEmpty()) {
-                    return new Result.Failure<>("Too many arguments");
-                }
-                try {
-                    var right = DoubleParser.parse(unparsedRight);
-                    var left = DoubleParser.parse(unparsedLeft);
-                    return new Result.Success<>(Map.of("left", left, "right", right));
-                } catch (Exception e) {
-                    return new Result.Failure<>(e.getMessage());
-                }
+            if (!args.isEmpty()) {
+                return new Result.Failure<>("Too many arguments");
             }
+            var right = DoubleParser.parse(unparsedRight);
+            var left = DoubleParser.parse(unparsedLeft);
+            return new Result.Success<>(Map.of("left", left, "right", right));
+        } catch (Exception e) {
+            return new Result.Failure<>(e.getMessage());
         }
     }
 
-    private static Result<Map<String, Object>> fizzbuzz(String arguments) throws Exception {
+    private static Result<Map<String, Object>> fizzbuzz(String arguments) {
         //Note: This is the first command your library may not support all the
         //functionality to implement yet. This is fine - parse the number like
         //normal, then check the range manually. The goal is to get a feel for
         //the validation involved even if it's not in the library yet.
         //var number = IntegerParser.parse(lexedArguments.get("number"));
         //if (number < 1 || number > 100) ...
-        var lexed = Lexer.parse(arguments);
-        switch (lexed) {
-            case Result.Failure<Map<String, Object>> v -> {
-                return new Result.Failure<>(v.error());
+        try {
+            var args = Lexer.parse(arguments);
+            var unparsedFizz = (String) args.remove("0");
+            if (unparsedFizz == null) {
+                return new Result.Failure<>("Missing arg");
             }
-            case Result.Success<Map<String, Object>> v -> {
-                var args = v.value();
-                var unparsedFizz = (String) args.remove("0");
-                if (unparsedFizz == null) {
-                    return new Result.Failure<>("Missing arg");
-                }
-                try {
-                    var fizz = IntegerParser.parse(unparsedFizz);
-                    if (1 > fizz || fizz > 100) {
-                        return new Result.Failure<>("Out of range");
-                    }
-                    return new Result.Success<>(Map.of("number", fizz));
-                } catch (Exception e) {
-                    return new Result.Failure<>(e.getMessage());
-                }
+            var fizz = IntegerParser.parse(unparsedFizz);
+            if (1 > fizz || fizz > 100) {
+                return new Result.Failure<>("Out of range");
             }
+            return new Result.Success<>(Map.of("number", fizz));
+        } catch (Exception e) {
+            return new Result.Failure<>(e.getMessage());
         }
     }
 
-    private static Result<Map<String, Object>> difficulty(String arguments) throws Exception {
-        var lexed = Lexer.parse(arguments);
-        switch (lexed) {
-            case Result.Failure<Map<String, Object>> v -> {
-                return new Result.Failure<>(v.error());
+    private static Result<Map<String, Object>> difficulty(String arguments) {
+        try {
+            var args = Lexer.parse(arguments);
+            var unparsedDifficulty = (String) args.remove("0");
+            if (unparsedDifficulty == null) {
+                return new Result.Failure<>("Missing arg");
             }
-            case Result.Success<Map<String, Object>> v -> {
-                var args = v.value();
-                var unparsedDifficulty = (String) args.remove("0");
-                if (unparsedDifficulty == null) {
-                    return new Result.Failure<>("Missing arg");
-                }
-                var difficulty = StringParser.parse(unparsedDifficulty);
-                if (!(difficulty.equals("easy") || difficulty.equals("normal") || difficulty.equals("hard") || difficulty.equals("peaceful"))) {
-                    return new Result.Failure<>("Invalid difficulty");
-                }
-                if (!args.isEmpty()) {
-                    return new Result.Failure<>("Too many args");
-                }
-                return new Result.Success<>(Map.of("difficulty", difficulty));
+            var difficulty = StringParser.parse(unparsedDifficulty);
+            if (!(difficulty.equals("easy") || difficulty.equals("normal") || difficulty.equals("hard") || difficulty.equals("peaceful"))) {
+                return new Result.Failure<>("Invalid difficulty");
             }
+            if (!args.isEmpty()) {
+                return new Result.Failure<>("Too many args");
+            }
+            return new Result.Success<>(Map.of("difficulty", difficulty));
+        } catch (Exception e) {
+            return new Result.Failure<>(e.getMessage());
         }
     }
 
-    private static Result<Map<String, Object>> echo(String arguments) throws Exception {
-        var lexed = Lexer.parse(arguments);
-        switch (lexed) {
-            case Result.Failure<Map<String, Object>> v -> {
-                return new Result.Failure<>(v.error());
+    private static Result<Map<String, Object>> echo(String arguments) {
+        try {
+            var args = Lexer.parse(arguments);
+            var unparsedMessage = args.remove("0");
+            if (unparsedMessage == null) {
+                return new Result.Success<>(Map.of("message", "Echo, echo, echo!"));
             }
-            case Result.Success<Map<String, Object>> v -> {
-                var args = v.value();
-                var unparsedMessage = args.remove("0");
-                if (unparsedMessage == null) {
-                    return new Result.Success<>(Map.of("message", "Echo, echo, echo!"));
-                }
-                var message = StringParser.parse((String) unparsedMessage);
-                if (!args.isEmpty()) {
-                    return new Result.Failure<>("Too many args");
-                }
-                return new Result.Success<>(Map.of("message", message));
+            var message = StringParser.parse((String) unparsedMessage);
+            if (!args.isEmpty()) {
+                return new Result.Failure<>("Too many args");
             }
+            return new Result.Success<>(Map.of("message", message));
+        } catch (Exception e) {
+            return new Result.Failure<>(e.getMessage());
         }
     }
 
-    private static Result<Map<String, Object>> search(String arguments) throws Exception {
-        var lexed = Lexer.parse(arguments);
-        switch (lexed) {
-            case Result.Failure<Map<String, Object>> v -> {
-                return new Result.Failure<>(v.error());
+    private static Result<Map<String, Object>> search(String arguments) {
+        try {
+            var args = Lexer.parse(arguments);
+            var unparsedTerm = (String) args.remove("0");
+            var unparsedCase = (String) args.remove("case-insensitive");
+            if (unparsedTerm == null) {
+                return new Result.Failure<>("Missing arg");
             }
-            case Result.Success<Map<String, Object>> v -> {
-                var args = v.value();
-                var unparsedTerm = (String) args.remove("0");
-                var unparsedCase = (String) args.remove("case-insensitive");
-                if (unparsedTerm == null) {
-                    return new Result.Failure<>("Missing arg");
-                }
-                var term = StringParser.parse(unparsedTerm);
-                var caseSensitivity = unparsedCase != null ? BooleanParser.parse(unparsedCase) : false;
-                if (!args.isEmpty()) {
-                    return new Result.Failure<>("Too many args");
-                }
-                return new Result.Success<>(Map.of("term", term, "case-insensitive", caseSensitivity));
+            var term = StringParser.parse(unparsedTerm);
+            var caseSensitivity = unparsedCase != null ? BooleanParser.parse(unparsedCase) : false;
+            if (!args.isEmpty()) {
+                return new Result.Failure<>("Too many args");
             }
+            return new Result.Success<>(Map.of("term", term, "case-insensitive", caseSensitivity));
+        } catch (Exception e) {
+            return new Result.Failure<>(e.getMessage());
         }
     }
 
-    private static Result<Map<String, Object>> weekday(String arguments) throws Exception {
-        var lexed = Lexer.parse(arguments);
-        switch (lexed) {
-            case Result.Failure<Map<String, Object>> v -> {
-                return new Result.Failure<>(v.error());
+    private static Result<Map<String, Object>> weekday(String arguments) {
+        try {
+            var args = Lexer.parse(arguments);
+            var unparsedDate = (String) args.remove("0");
+            if (unparsedDate == null) {
+                return new Result.Failure<>("Missing arg");
             }
-            case Result.Success<Map<String, Object>> v -> {
-                var args = v.value();
-                var unparsedDate = (String) args.remove("0");
-                if (unparsedDate == null) {
-                    return new Result.Failure<>("Missing arg");
-                }
-                try {
-                    var date = CustomParser.parse(LocalDate::parse, unparsedDate);
-                    if (!args.isEmpty()) {
-                        return new Result.Failure<>("Missing arg");
-                    }
-                    return new Result.Success<>(Map.of("date", date));
-                } catch (Exception e) {
-                    return new Result.Failure<>(e.getMessage());
-                }
+            var date = CustomParser.parse(LocalDate::parse, unparsedDate);
+            if (!args.isEmpty()) {
+                return new Result.Failure<>("Missing arg");
             }
+            return new Result.Success<>(Map.of("date", date));
+        } catch (Exception e) {
+            return new Result.Failure<>(e.getMessage());
         }
     }
-
 }
