@@ -30,13 +30,13 @@ public class Scenarios {
         };
     }
 
-    private static Result<Map<String, Object>> lex(String arguments) {
+    private static Result<Map<String, Object>> lex(String arguments) throws Exception{
         //Note: For ease of testing, this should use your Lexer implementation
         //directly rather and return those values.
-        return Lexer.parse(arguments); //TODO
+        return new Result.Success<>(Lexer.parse(arguments));
     }
 
-    private static Result<Map<String, Object>> add(String arguments) {
+    private static Result<Map<String, Object>> add(String arguments) throws Exception {
         //Note: For this part of the project, we're focused on lexing/parsing.
         //The implementation of these scenarios isn't going to look like a full
         //command, but rather some weird hodge-podge mix. For example:
@@ -70,7 +70,7 @@ public class Scenarios {
         }
     }
 
-    private static Result<Map<String, Object>> sub(String arguments) {
+    private static Result<Map<String, Object>> sub(String arguments) throws Exception {
         var lexed = Lexer.parse(arguments);
         switch (lexed) {
             case Result.Failure<Map<String, Object>> v -> {
@@ -97,7 +97,7 @@ public class Scenarios {
         }
     }
 
-    private static Result<Map<String, Object>> fizzbuzz(String arguments) {
+    private static Result<Map<String, Object>> fizzbuzz(String arguments) throws Exception {
         //Note: This is the first command your library may not support all the
         //functionality to implement yet. This is fine - parse the number like
         //normal, then check the range manually. The goal is to get a feel for
@@ -128,7 +128,7 @@ public class Scenarios {
         }
     }
 
-    private static Result<Map<String, Object>> difficulty(String arguments) {
+    private static Result<Map<String, Object>> difficulty(String arguments) throws Exception {
         var lexed = Lexer.parse(arguments);
         switch (lexed) {
             case Result.Failure<Map<String, Object>> v -> {
@@ -152,7 +152,7 @@ public class Scenarios {
         }
     }
 
-    private static Result<Map<String, Object>> echo(String arguments) {
+    private static Result<Map<String, Object>> echo(String arguments) throws Exception {
         var lexed = Lexer.parse(arguments);
         switch (lexed) {
             case Result.Failure<Map<String, Object>> v -> {
@@ -173,7 +173,7 @@ public class Scenarios {
         }
     }
 
-    private static Result<Map<String, Object>> search(String arguments) {
+    private static Result<Map<String, Object>> search(String arguments) throws Exception {
         var lexed = Lexer.parse(arguments);
         switch (lexed) {
             case Result.Failure<Map<String, Object>> v -> {
@@ -196,7 +196,7 @@ public class Scenarios {
         }
     }
 
-    private static Result<Map<String, Object>> weekday(String arguments) {
+    private static Result<Map<String, Object>> weekday(String arguments) throws Exception {
         var lexed = Lexer.parse(arguments);
         switch (lexed) {
             case Result.Failure<Map<String, Object>> v -> {

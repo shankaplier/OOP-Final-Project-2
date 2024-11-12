@@ -190,7 +190,6 @@ class ScenariosTests {
     private static Stream<Arguments> testWeekday() {
         return Stream.of(
             Arguments.of("Valid", """
-                weekday 2024-10-23
                 """, Map.of("date", LocalDate.of(2024, 10, 23))),
             Arguments.of("Invalid Month", """
                 weekday 2024-23-10

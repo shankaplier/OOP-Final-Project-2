@@ -6,14 +6,14 @@ import java.util.Map;
 
 public class Lexer {
 
-    public static Result<Map<String, Object>> parse(String input)
+    public static Map<String, Object> parse(String input) throws Exception
     {
         Map<String, Object> LexedArguments = new HashMap<>();
         int TokenCount = 0;
         String[] tokenList = input.split(" ");
         if(tokenList[0] == "")
         {
-            return new Result.Success<>(LexedArguments);
+            return LexedArguments;
         }
         for (int i = 0; i < tokenList.length; i++)
         {
@@ -27,7 +27,7 @@ public class Lexer {
                     additionalComments = " Please give a non empty flag";
                 }
                 System.out.println(characterCounter('-', tokenList[i]));
-                return new Result.Failure<>("Invalid argument : " + tokenList[i] + " contains more than 2 '-'." + additionalComments);
+                throw new Exception("Invalid argument : " + tokenList[i] + " contains more than 2 '-'." + additionalComments);
             }
             //If the token that's being read has 2 '-'s
             else if (numberOfFlags == 2)
@@ -35,18 +35,18 @@ public class Lexer {
                 String flagName = tokenList[i].substring(2);
                 if (flagName.isEmpty())
                 {
-                    return new Result.Failure<>("Invalid argument : The flag " + tokenList[i] + " is empty. Please give a non empty flag.");
+                    throw new Exception("Invalid argument : The flag " + tokenList[i] + " is empty. Please give a non empty flag.");
                 }
                 //Check if the token is already in our map of tokens
                 if (LexedArguments.containsKey(flagName)) {
                     //If the token is present throw an error
-                    return new Result.Failure<>("The flag " + tokenList[i] + " has been already initialized. Do not initialize it again.");
+                    throw new Exception("The flag " + tokenList[i] + " has been already initialized. Do not initialize it again.");
                 } else {
                     //The token does not exist check the next value
                     //If the next token is a flag
                     if (i < tokenList.length - 1 && characterCounter('-', tokenList[i + 1]) >= 2) {
                         //The next token is a flag which is incorrect
-                        return new Result.Failure<>("The flag " + tokenList[i] + " is given a value of " + tokenList[i + 1] + " which has more than 1 '-'. Please give a value that has no more than 1 '-'.");
+                        throw new Exception("The flag " + tokenList[i] + " is given a value of " + tokenList[i + 1] + " which has more than 1 '-'. Please give a value that has no more than 1 '-'.");
                     }
                     //If the next token is not a flag
                     else if (i < tokenList.length - 1 && characterCounter('-', tokenList[i + 1]) <= 1) {
@@ -61,13 +61,13 @@ public class Lexer {
                         }
                         if (flagValue.equals("-"))
                         {
-                            return new Result.Failure<>("The flag " + tokenList[i] + " was not given an argument, Please provide an argument");
+                            throw new Exception("The flag " + tokenList[i] + " was not given an argument, Please provide an argument");
                         }
                         LexedArguments.put(flagName, flagValue);
                         TokenCount++;
                         i++;
                     } else {
-                        return new Result.Failure<>("the flag " + tokenList[i] + " was not given an argument, Please provide an argument");
+                        throw new Exception("the flag " + tokenList[i] + " was not given an argument, Please provide an argument");
                     }
                 }
             }
@@ -84,13 +84,13 @@ public class Lexer {
                 }
                 if (Token.equals("-"))
                 {
-                    return new Result.Failure<>("Please provide a non empty literal");
+                    throw new Exception("Please provide a non empty literal");
                 }
                 LexedArguments.put(String.valueOf(TokenCount), Token);
                 TokenCount++;
             }
         }
-        return new Result.Success<>(LexedArguments);
+        return LexedArguments;
     }
 
     private static int characterCounter(Character character, String textToBeSearched)
