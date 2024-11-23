@@ -77,8 +77,8 @@ Add function
 ```java
 private static Result<Map<String, Object>> add(String arguments) {
     var commandObject = new Command("add");
-    commnandObject.addArgument("number1").typeof("Integer").condition((i) -> 1 <= i && i >= 100 );
-    commandObject.addArgument("number2").typeof("Integer").condition((i) -> 1 <= i && i >= 100 );;
+    commnandObject.addArgument("number1").parser(new IntegerParser()).condition((i) -> 1 <= i && i >= 100 );
+    commandObject.addArgument("number2").parser(new IntegerParser()).condition((i) -> 1 <= i && i >= 100 );;
     commandObject.input(arguments);
     Int number1 = commandObject.get("number1");
     Int number2 = commandObject.get("number2");
@@ -89,8 +89,8 @@ Sub function
 ```java
 private static Result<Map<String, Object>> sub(String arguments) {
     var commandObject = new Command("sub");
-    commnandObject.addArgument("number1").typeof("Integer");
-    commandObject.addArgument("number2").typeof("Integer");
+    commnandObject.addArgument("number1").parser(new Doubleparser());
+    commandObject.addArgument("number2").parser(new DoubleParser());
     commandObject.input(arguments);
     Int number1 = commandObject.get("number1");
     Int number2 = commandObject.get("number2");
@@ -102,7 +102,7 @@ fizzbuzz function
 ```java
 private static Result<Map<String, Object>> fizzbuzz(String arguments) {
     var commandObject = new Command("fizzbuzz");
-    commnandObject.addArgument("number1").typeof("integer").condition((i) -> 0 <= i && i <= 100);
+    commnandObject.addArgument("number1").parser(new StringParser()).condition((i) -> 0 <= i && i <= 100);
     commandObject.input(arguments);
     Int fizz = commandObject.get("number1");
     return new Result.Success<>(Map.of("number", fizz));
@@ -113,7 +113,7 @@ difficulty function
 ```java
 private static Result<Map<String, Object>> difficulty(String arguments) {
     var commandObject = new Command("difficulty");
-    commnandObject.addArgument("difficulty").typeof("string").condition((i) -> i == "easy" || i == "normal" || i == "hard" || i == "peaceful");
+    commnandObject.addArgument("difficulty").parser(new StringParser()).condition((i) -> i == "easy" || i == "normal" || i == "hard" || i == "peaceful");
     commandObject.input(arguments);
     String difficulty = commandObject.get("difficulty");
     return new Result.Success<>(Map.of("difficulty", difficulty));
@@ -124,7 +124,7 @@ echo function
 ```java
 private static Result<Map<String, Object>> echo(String arguments) {
     var commandObject = new Command("echo");
-    commandObject.addArgument("message").typeof("String").optional().default("Echo, echo, echo...");
+    commandObject.addArgument("message").parser(new StringParser()).optional().default("Echo, echo, echo...");
     message = commandObject.get("message");
     return new Result.Success<>(Map.of("message", message));
     }
@@ -134,7 +134,7 @@ search function
 ```java
 private static Result<Map<String, Object>> search(String arguments) {
     var commandObject = new Command("search");
-    commandObject.addArgument("term").typeof("String").positional();
+    commandObject.addArgument("term").parser(new StringParser()).positional();
     commandObject.addArgument("case-insensitive").typeof(Boolean).optional().default(False)
     term = commandObject.get("term");
     sensitivity = commandObject.get("case-insensitive");
@@ -149,9 +149,9 @@ import java.time.LocalDate;
 
 private static Result<Map<String, Object>> weekday(String arguments) {
     var commandObject = new Command("weekday");
-    commandObject.addArgument("date").typeof('string').positional();
+    commandObject.addArgument("date").parser(new CustomParser()).positional();
     commandObject.input(arguments);
-    LocalDate date = LocalDate.parse(commandObject.get("date"));
+    var date = commandObject.get("date");
     return new Result.Success<>(Map.of("date", date));
     }
 }
