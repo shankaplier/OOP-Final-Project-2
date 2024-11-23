@@ -60,8 +60,8 @@ public class Scenarios {
                 return new Result.Failure<>("Too many arguments");
             }
             try {
-                var right = IntegerParser.parse(unparsedRight);
-                var left = IntegerParser.parse(unparsedLeft);
+                var right = new IntegerParser().parse(unparsedRight);
+                var left = new IntegerParser().parse(unparsedLeft);
                 return new Result.Success<>(Map.of("left", left, "right", right));
             } catch (Exception e) {
                 return new Result.Failure<>(e.getMessage());
@@ -82,8 +82,8 @@ public class Scenarios {
             if (!args.isEmpty()) {
                 return new Result.Failure<>("Too many arguments");
             }
-            var right = DoubleParser.parse(unparsedRight);
-            var left = DoubleParser.parse(unparsedLeft);
+            var right = new DoubleParser().parse(unparsedRight);
+            var left = new DoubleParser().parse(unparsedLeft);
             return new Result.Success<>(Map.of("left", left, "right", right));
         } catch (Exception e) {
             return new Result.Failure<>(e.getMessage());
@@ -103,7 +103,7 @@ public class Scenarios {
             if (unparsedFizz == null) {
                 return new Result.Failure<>("Missing arg");
             }
-            var fizz = IntegerParser.parse(unparsedFizz);
+            var fizz = new IntegerParser().parse(unparsedFizz);
             if (1 > fizz || fizz > 100) {
                 return new Result.Failure<>("Out of range");
             }
@@ -120,7 +120,7 @@ public class Scenarios {
             if (unparsedDifficulty == null) {
                 return new Result.Failure<>("Missing arg");
             }
-            var difficulty = StringParser.parse(unparsedDifficulty);
+            var difficulty = new StringParser().parse(unparsedDifficulty);
             if (!(difficulty.equals("easy") || difficulty.equals("normal") || difficulty.equals("hard") || difficulty.equals("peaceful"))) {
                 return new Result.Failure<>("Invalid difficulty");
             }
@@ -140,7 +140,7 @@ public class Scenarios {
             if (unparsedMessage == null) {
                 return new Result.Success<>(Map.of("message", "Echo, echo, echo!"));
             }
-            var message = StringParser.parse((String) unparsedMessage);
+            var message = new StringParser().parse((String) unparsedMessage);
             if (!args.isEmpty()) {
                 return new Result.Failure<>("Too many args");
             }
@@ -158,8 +158,8 @@ public class Scenarios {
             if (unparsedTerm == null) {
                 return new Result.Failure<>("Missing arg");
             }
-            var term = StringParser.parse(unparsedTerm);
-            var caseSensitivity = unparsedCase != null ? BooleanParser.parse(unparsedCase) : false;
+            var term = new StringParser().parse(unparsedTerm);
+            var caseSensitivity = unparsedCase != null ? new BooleanParser().parse(unparsedCase) : false;
             if (!args.isEmpty()) {
                 return new Result.Failure<>("Too many args");
             }
@@ -176,7 +176,7 @@ public class Scenarios {
             if (unparsedDate == null) {
                 return new Result.Failure<>("Missing arg");
             }
-            var date = CustomParser.parse(LocalDate::parse, unparsedDate);
+            var date = new CustomParser<>(LocalDate::parse).parse(unparsedDate);
             if (!args.isEmpty()) {
                 return new Result.Failure<>("Missing arg");
             }

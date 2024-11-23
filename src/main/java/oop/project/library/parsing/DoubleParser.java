@@ -1,7 +1,7 @@
 package oop.project.library.parsing;
 
-public class DoubleParser {
-    public static Double parse(String input) {
+public class DoubleParser implements Parser<Double> {
+    public Double parse(String input) {
         try {
             return Double.parseDouble(input);
         } catch (Exception e) {

@@ -2,8 +2,14 @@ package oop.project.library.parsing;
 
 import java.util.function.Function;
 
-public class CustomParser {
-    public static <T> T parse(Function<String, T> parser, String input) {
+public class CustomParser<T> implements Parser<T> {
+    Function<String, T> parser;
+    public CustomParser(Function<String, T> parser) {
+        this.parser = parser;
+    }
+
+    @Override
+    public T parse(String input) {
         try {
             return parser.apply(input);
         } catch (Exception e) {

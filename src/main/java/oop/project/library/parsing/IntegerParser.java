@@ -1,7 +1,7 @@
 package oop.project.library.parsing;
 
-public class IntegerParser {
-    public static Integer parse(String input) {
+public class IntegerParser implements Parser<Integer> {
+    public Integer parse(String input) {
         try {
             return Integer.parseInt(input);
         } catch (Exception e) {
