@@ -1,89 +1,72 @@
 # Will
 Add
 ```java
-var command = new Command()
-        .positional(
-                "left",
-                new Argument(new IntegerParser())
-        ).positional(
-                "right",
-                new Argument(new IntegerParser())
-        );
-var arguments = command.run(input);
-int left = arguments.get("left");
-int right = arguments.get("right");
+void add(String input) {
+    var command = new Command("add");
+    command.argument("left").positional().parser(new IntegerParser());
+    command.argument("right").positional().parser(new IntegerParser());
+    var arguments = command.parse(input);
+    int left = arguments.get("left");
+    int right = arguments.get("right");
+}
 ```
 Sub
 ```java
-var command = new Command()
-        .named(
-                "left",
-                new Argument(new IntegerParser())
-        ).named(
-                "right",
-                new Argument(new IntegerParser())
-        );
-var arguments = command.run(input);
-int left = arguments.get("left");
-int right = arguments.get("right");
+void sub(String input) {
+    var command = new Command("sub");
+    command.argument("left").named().parser(new IntegerParser());
+    command.argument("right").named().parser(new IntegerParser());
+    var arguments = command.parse(input);
+    int left = arguments.get("left");
+    int right = arguments.get("right");
+}
 ```
 fizzbuzz
 ```java
-var command = new Command()
-        .positional(
-                "number",
-                new Argument(new IntegerParser())
-                        .require(x -> 1 <= x && x <= 100)
-        );
-var arguments = command.run(input);
-int number = arguments.get("number");
+void fizzbuzz(String input) {
+    var command = new Command("fizzbuzz");
+    command.argument("number").parser(new IntegerParser()).require(i -> 1 <= i && i <= 100);
+    var arguments = command.parse(input);
+    int number = arguments.get("number");
+}
 ```
 difficulty
 ```java
-var command = new Command()
-        .positional(
-                "difficulty",
-                new Argument()
-                        .choices("easy", "normal", "hard", "peaceful")
-        );
-var arguments = command.run(input);
-String difficulty = arguments.get("difficulty");
+void difficulty(String input) {
+    var command = new Command("difficulty");
+    command.argument("difficulty").positional().choices("easy", "normal", "hard", "peaceful");
+    var arguments = command.parse("input");
+    String difficulty = arguments.get("difficulty");
+}
 ```
 echo
 ```java
-var command = new Command()
-        .positional(
-                "message",
-                new Argument()
-                        .optional("Echo, echo, echo...")
-        );
-var arguments = command.run(input);
-String message = arguments.get("message");
+void echo(String input) {
+    var command = new Command("echo");
+    command.argument("message").positional().optional().defaultValue("Echo, echo, echo...");
+    var arguments = command.parse(input);
+    String message = arguments.get("message");
+}
 ```
 search
 ```java
-var command = new Command()
-        .positional(
-                "term",
-                new Argument()
-        ).named(
-                "case-insensitive",
-                new Argument(new BooleanParser())
-                        .optional(false)
-        );
-var arguments = command.run(input);
-String term = arguments.get("term");
-bool caseInsensitive = arguments.get("case-insensitive");
+void search(String input) {
+    var command = new Command("search");
+    command.argument("term");
+    command.argument("case-insensitive").named().optional().defaultValue(false);
+    var arguments = command.parse(input);
+    String term = arguments.get("term");
+    bool caseSensitive = arguments.get("case-insensitive");
+}
 ```
 weekday
 ```java
-var command = new Command()
-        .positional(
-                "date",
-                new ArgumentParser(new CustomParser(LocalDate::parse))
-        );
-var arguments = command.run(input);
-LocalDate date = arguments.get("date");
+void weekday(String input) {
+    var command = new Command("weekday");
+    command.argument("date").parser(new CustomParser(LocalDate::parse));
+    var arguments = command.parse(input);
+    LocalDate date = arguments.get("date");
+}
 ```
 # Shashank
 
