@@ -9,10 +9,14 @@ public class Argument<T> {
     Parser<T> parser;
     List<Function<T, Boolean>> validators;
     String name;
-    public Argument(String name, Parser<T> parser, List<Function<T, Boolean>> validators) {
+    String argumentType;
+    Object defaultValue;
+    public Argument(String name, Parser<T> parser, List<Function<T, Boolean>> validators, String argumentType, Object defaultValue) {
         this.parser = parser;
         this.validators = validators;
         this.name = name;
+        this.argumentType = argumentType;
+        this.defaultValue = defaultValue;
     }
 
     public T run(String input) {
@@ -23,5 +27,19 @@ public class Argument<T> {
             }
         }
         return value;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public String getArgumentType()
+    {
+        return argumentType;
+    }
+
+    public Object getDefaultValue(){
+        return defaultValue;
     }
 }

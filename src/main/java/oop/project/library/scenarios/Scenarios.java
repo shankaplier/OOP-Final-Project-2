@@ -2,9 +2,12 @@ package oop.project.library.scenarios;
 
 import oop.project.library.lexer.Lexer;
 import oop.project.library.parsing.*;
+import oop.project.library.command.command;
 
 import java.time.LocalDate;
 import java.util.Map;
+
+
 
 public class Scenarios {
 
@@ -50,44 +53,71 @@ public class Scenarios {
         //This is fine - our goal right now is to implement this functionality
         //so we can build up the actual command system in Part 3.
         try {
-            var args = Lexer.parse(arguments);
-            var unparsedRight = (String) args.remove("1");
-            var unparsedLeft = (String) args.remove("0");
-            if (unparsedLeft == null || unparsedRight == null) {
-                return new Result.Failure<>("Missing arguments");
-            }
-            if (!args.isEmpty()) {
-                return new Result.Failure<>("Too many arguments");
-            }
-            try {
-                var right = new IntegerParser().parse(unparsedRight);
-                var left = new IntegerParser().parse(unparsedLeft);
-                return new Result.Success<>(Map.of("left", left, "right", right));
-            } catch (Exception e) {
-                return new Result.Failure<>(e.getMessage());
-            }
+            var commandObject = new command("add");
+            commandObject.argument("number1", new IntegerParser()).positional();
+            commandObject.argument("number2", new IntegerParser()).positional();
+            var argument = commandObject.parse(arguments);
+            var number1 = argument.get("number1");
+            var number2 = argument.get("number2");
+            return new Result.Success<>(Map.of("left", number1, "right", number2));
         } catch (Exception e) {
             return new Result.Failure<>(e.getMessage());
         }
+
+//        try {
+//            var args = Lexer.parse(arguments);
+//            var unparsedRight = (String) args.remove("1");
+//            var unparsedLeft = (String) args.remove("0");
+//            if (unparsedLeft == null || unparsedRight == null) {
+//                return new Result.Failure<>("Missing arguments");
+//            }
+//            if (!args.isEmpty()) {
+//                return new Result.Failure<>("Too many arguments");
+//            }
+//            try {
+//                var right = new IntegerParser().parse(unparsedRight);
+//                var left = new IntegerParser().parse(unparsedLeft);
+//                return new Result.Success<>(Map.of("left", left, "right", right));
+//            } catch (Exception e) {
+//                return new Result.Failure<>(e.getMessage());
+//            }
+//        } catch (Exception e) {
+//            return new Result.Failure<>(e.getMessage());
+//    }
     }
 
     private static Result<Map<String, Object>> sub(String arguments) {
+
         try {
-            var args = Lexer.parse(arguments);
-            var unparsedRight = (String) args.remove("right");
-            var unparsedLeft = (String) args.remove("left");
-            if (unparsedLeft == null || unparsedRight == null) {
-                return new Result.Failure<>("Missing arguments");
-            }
-            if (!args.isEmpty()) {
-                return new Result.Failure<>("Too many arguments");
-            }
-            var right = new DoubleParser().parse(unparsedRight);
-            var left = new DoubleParser().parse(unparsedLeft);
-            return new Result.Success<>(Map.of("left", left, "right", right));
+            var commandObject = new command("sub");
+            commandObject.argument("left", new DoubleParser()).named();
+            commandObject.argument("right", new DoubleParser()).named();
+            var argument = commandObject.parse(arguments);
+            var number1 = argument.get("left");
+            var number2 = argument.get("right");
+            return new Result.Success<>(Map.of("left", number1, "right", number2));
         } catch (Exception e) {
             return new Result.Failure<>(e.getMessage());
         }
+
+
+
+//        try {
+//            var args = Lexer.parse(arguments);
+//            var unparsedRight = (String) args.remove("right");
+//            var unparsedLeft = (String) args.remove("left");
+//            if (unparsedLeft == null || unparsedRight == null) {
+//                return new Result.Failure<>("Missing arguments");
+//            }
+//            if (!args.isEmpty()) {
+//                return new Result.Failure<>("Too many arguments");
+//            }
+//            var right = new DoubleParser().parse(unparsedRight);
+//            var left = new DoubleParser().parse(unparsedLeft);
+//            return new Result.Success<>(Map.of("left", left, "right", right));
+//        } catch (Exception e) {
+//            return new Result.Failure<>(e.getMessage());
+//        }
     }
 
     private static Result<Map<String, Object>> fizzbuzz(String arguments) {
@@ -97,57 +127,93 @@ public class Scenarios {
         //the validation involved even if it's not in the library yet.
         //var number = IntegerParser.parse(lexedArguments.get("number"));
         //if (number < 1 || number > 100) ...
+
         try {
-            var args = Lexer.parse(arguments);
-            var unparsedFizz = (String) args.remove("0");
-            if (unparsedFizz == null) {
-                return new Result.Failure<>("Missing arg");
-            }
-            var fizz = new IntegerParser().parse(unparsedFizz);
-            if (1 > fizz || fizz > 100) {
-                return new Result.Failure<>("Out of range");
-            }
-            return new Result.Success<>(Map.of("number", fizz));
+            var commandObject = new command("fizzbuzz");
+            commandObject.argument("number", new IntegerParser()).positional().validator((i) -> 1 <= i && i <= 100);
+            var argument = commandObject.parse(arguments);
+            var number = argument.get("number");
+            return new Result.Success<>(Map.of("number", number));
         } catch (Exception e) {
             return new Result.Failure<>(e.getMessage());
         }
+
+
+//        try {
+//            var args = Lexer.parse(arguments);
+//            var unparsedFizz = (String) args.remove("0");
+//            if (unparsedFizz == null) {
+//                return new Result.Failure<>("Missing arg");
+//            }
+//            var fizz = new IntegerParser().parse(unparsedFizz);
+//            if (1 > fizz || fizz > 100) {
+//                return new Result.Failure<>("Out of range");
+//            }
+//            return new Result.Success<>(Map.of("number", fizz));
+//        } catch (Exception e) {
+//            return new Result.Failure<>(e.getMessage());
+//        }
     }
 
     private static Result<Map<String, Object>> difficulty(String arguments) {
+
         try {
-            var args = Lexer.parse(arguments);
-            var unparsedDifficulty = (String) args.remove("0");
-            if (unparsedDifficulty == null) {
-                return new Result.Failure<>("Missing arg");
-            }
-            var difficulty = new StringParser().parse(unparsedDifficulty);
-            if (!(difficulty.equals("easy") || difficulty.equals("normal") || difficulty.equals("hard") || difficulty.equals("peaceful"))) {
-                return new Result.Failure<>("Invalid difficulty");
-            }
-            if (!args.isEmpty()) {
-                return new Result.Failure<>("Too many args");
-            }
+            var commandObject = new command("difficulty");
+            commandObject.argument("difficulty", new StringParser()).positional().validator((i) -> i.equals("easy") || i.equals("medium") || i.equals("hard") || i.equals("peaceful"));
+            var argument = commandObject.parse(arguments);
+            var difficulty = argument.get("difficulty");
             return new Result.Success<>(Map.of("difficulty", difficulty));
         } catch (Exception e) {
             return new Result.Failure<>(e.getMessage());
         }
+
+
+
+//        try {
+//            var args = Lexer.parse(arguments);
+//            var unparsedDifficulty = (String) args.remove("0");
+//            if (unparsedDifficulty == null) {
+//                return new Result.Failure<>("Missing arg");
+//            }
+//            var difficulty = new StringParser().parse(unparsedDifficulty);
+//            if (!(difficulty.equals("easy") || difficulty.equals("normal") || difficulty.equals("hard") || difficulty.equals("peaceful"))) {
+//                return new Result.Failure<>("Invalid difficulty");
+//            }
+//            if (!args.isEmpty()) {
+//                return new Result.Failure<>("Too many args");
+//            }
+//            return new Result.Success<>(Map.of("difficulty", difficulty));
+//        } catch (Exception e) {
+//            return new Result.Failure<>(e.getMessage());
+//        }
     }
 
     private static Result<Map<String, Object>> echo(String arguments) {
+
         try {
-            var args = Lexer.parse(arguments);
-            var unparsedMessage = args.remove("0");
-            if (unparsedMessage == null) {
-                return new Result.Success<>(Map.of("message", "Echo, echo, echo!"));
-            }
-            var message = new StringParser().parse((String) unparsedMessage);
-            if (!args.isEmpty()) {
-                return new Result.Failure<>("Too many args");
-            }
-            return new Result.Success<>(Map.of("message", message));
+            var commandObject = new command("echo");
+            commandObject.argument("message", new StringParser()).optional().defaultValue("Echo, echo, echo!");
+            var argument = commandObject.parse(arguments);
+            var message = argument.get("message");
+            return new Result.Success<>(Map.of("echo", message));
         } catch (Exception e) {
             return new Result.Failure<>(e.getMessage());
         }
+
+//        try {
+//            var args = Lexer.parse(arguments);
+//            var unparsedMessage = args.remove("0");
+//            if (unparsedMessage == null) {
+//                return new Result.Success<>(Map.of("message", "Echo, echo, echo!"));
+//            }
+//            var message = new StringParser().parse((String) unparsedMessage);
+//            if (!args.isEmpty()) {
+//                return new Result.Failure<>("Too many args");
+//            }
+//            return new Result.Success<>(Map.of("message", message));
+//        } catch (Exception e) {
+//            return new Result.Failure<>(e.getMessage());
+//        }
     }
 
     private static Result<Map<String, Object>> search(String arguments) {

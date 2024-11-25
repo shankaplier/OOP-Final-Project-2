@@ -64,6 +64,7 @@ public class ArgumentBuilder<T> {
     }
 
     public ArgumentBuilder<T> optional() {
+        argumentType = ArgumentType.OPTIONAL;
         optional = true;
         return this;
     }
@@ -85,12 +86,13 @@ public class ArgumentBuilder<T> {
         if (argumentType.equals(ArgumentType.NOT_SET)) {
             throw new ArgumentException();
         }
-        return new Argument<T>(name, parser, validators);
+        return new Argument<T>(name, parser, validators, argumentType.name(), defaultValue);
     }
 
     private enum ArgumentType {
         NOT_SET,
         POSITIONAL,
         NAMED,
+        OPTIONAL,
     }
 }
