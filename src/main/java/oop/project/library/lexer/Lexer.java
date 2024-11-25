@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class Lexer {
 
-    public static Map<String, Object> parse(String input) throws Exception
+    public static Map<String, Object> parse(String input) throws LexerException
     {
         Map<String, Object> LexedArguments = new HashMap<>();
         int TokenCount = 0;
@@ -21,13 +21,7 @@ public class Lexer {
             //If the token contains 3 or more '-'s
             if(numberOfFlags >= 3)
             {
-                String additionalComments = "";
-                if(tokenList[i].substring(numberOfFlags).isEmpty())
-                {
-                    additionalComments = " Please give a non empty flag";
-                }
-                System.out.println(characterCounter('-', tokenList[i]));
-                throw new Exception("Invalid argument : " + tokenList[i] + " contains more than 2 '-'." + additionalComments);
+                throw new LexerException("Invalid flag : " + tokenList[i] + " contains more than 2 '-'.");
             }
             //If the token that's being read has 2 '-'s
             else if (numberOfFlags == 2)
@@ -35,18 +29,18 @@ public class Lexer {
                 String flagName = tokenList[i].substring(2);
                 if (flagName.isEmpty())
                 {
-                    throw new Exception("Invalid argument : The flag " + tokenList[i] + " is empty. Please give a non empty flag.");
+                    throw new LexerException("Invalid argument : The flag is " + tokenList[i] + " is not named. Please name the flag.");
                 }
                 //Check if the token is already in our map of tokens
                 if (LexedArguments.containsKey(flagName)) {
                     //If the token is present throw an error
-                    throw new Exception("The flag " + tokenList[i] + " has been already initialized. Do not initialize it again.");
+                    throw new LexerException("The flag " + tokenList[i] + " has been given a value. Do not give it a value again.");
                 } else {
                     //The token does not exist check the next value
                     //If the next token is a flag
                     if (i < tokenList.length - 1 && characterCounter('-', tokenList[i + 1]) >= 2) {
                         //The next token is a flag which is incorrect
-                        throw new Exception("The flag " + tokenList[i] + " is given a value of " + tokenList[i + 1] + " which has more than 1 '-'. Please give a value that has no more than 1 '-'.");
+                        throw new LexerException("The flag " + tokenList[i] + " is given a value of " + tokenList[i + 1] + " which has more than 1 '-'. Please give a value that has no more than 1 '-'.");
                     }
                     //If the next token is not a flag
                     else if (i < tokenList.length - 1 && characterCounter('-', tokenList[i + 1]) <= 1) {
@@ -56,18 +50,19 @@ public class Lexer {
                         if (flagValue.startsWith("-")) {
                             if (!flagValue.matches("-?\\d+.?\\d*"))
                             {
+                                //Maybe change this
                                 flagValue = flagValue.substring(1);
                             }
                         }
                         if (flagValue.equals("-"))
                         {
-                            throw new Exception("The flag " + tokenList[i] + " was not given an argument, Please provide an argument");
+                            throw new LexerException("The flag " + tokenList[i] + " was not given an argument, Please provide an argument");
                         }
                         LexedArguments.put(flagName, flagValue);
                         TokenCount++;
                         i++;
                     } else {
-                        throw new Exception("the flag " + tokenList[i] + " was not given an argument, Please provide an argument");
+                        throw new LexerException("the flag " + tokenList[i] + " was not given an argument, Please provide an argument");
                     }
                 }
             }
@@ -84,7 +79,7 @@ public class Lexer {
                 }
                 if (Token.equals("-"))
                 {
-                    throw new Exception("Please provide a non empty literal");
+                    throw new LexerException("Please provide a non empty literal");
                 }
                 LexedArguments.put(String.valueOf(TokenCount), Token);
                 TokenCount++;

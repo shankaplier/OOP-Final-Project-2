@@ -56,6 +56,7 @@ public class Scenarios {
             var commandObject = new command("add");
             commandObject.argument("number1", new IntegerParser()).positional();
             commandObject.argument("number2", new IntegerParser()).positional();
+            commandObject.build();
             var argument = commandObject.parse(arguments);
             var number1 = argument.get("number1");
             var number2 = argument.get("number2");
@@ -92,6 +93,7 @@ public class Scenarios {
             var commandObject = new command("sub");
             commandObject.argument("left", new DoubleParser()).named();
             commandObject.argument("right", new DoubleParser()).named();
+            commandObject.build();
             var argument = commandObject.parse(arguments);
             var number1 = argument.get("left");
             var number2 = argument.get("right");
@@ -131,6 +133,7 @@ public class Scenarios {
         try {
             var commandObject = new command("fizzbuzz");
             commandObject.argument("number", new IntegerParser()).positional().validator((i) -> 1 <= i && i <= 100);
+            commandObject.build();
             var argument = commandObject.parse(arguments);
             var number = argument.get("number");
             return new Result.Success<>(Map.of("number", number));
@@ -160,6 +163,7 @@ public class Scenarios {
         try {
             var commandObject = new command("difficulty");
             commandObject.argument("difficulty", new StringParser()).positional().choices("easy", "medium", "hard", "peaceful");
+            commandObject.build();
             var argument = commandObject.parse(arguments);
             var difficulty = argument.get("difficulty");
             return new Result.Success<>(Map.of("difficulty", difficulty));
@@ -193,6 +197,7 @@ public class Scenarios {
         try {
             var commandObject = new command("echo");
             commandObject.argument("message", new StringParser()).optional().positional().defaultValue("Echo, echo, echo!");
+            commandObject.build();
             var argument = commandObject.parse(arguments);
             var message = argument.get("message");
             return new Result.Success<>(Map.of("message", message));
@@ -222,6 +227,7 @@ public class Scenarios {
             var commandObject = new command("search");
             commandObject.argument("term", new StringParser()).positional();
             commandObject.argument("case-insensitive", new BooleanParser()).optional().named().defaultValue(false);
+            commandObject.build();
             var argument = commandObject.parse(arguments);
             var term = argument.get("term");
             var caseInsensitive = argument.get("case-insensitive");
@@ -255,6 +261,7 @@ public class Scenarios {
         try {
             var commandObject = new command("weekday");
             commandObject.argument("date", new CustomParser<>(LocalDate::parse)).positional();
+            commandObject.build();
             var argument = commandObject.parse(arguments);
             var date = argument.get("date");
             return new Result.Success<>(Map.of("date", date));

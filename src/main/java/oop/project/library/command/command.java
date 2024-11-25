@@ -36,24 +36,23 @@ public class command {
         {
             if (i+1 < ArgumentBuilderList.size())
             {
-                if (ArgumentBuilderList.get(i).isOptional() && (ArgumentBuilderList.get(i+1).isNamed() || ArgumentBuilderList.get(i+1).isPositional()))
+                if (ArgumentBuilderList.get(i).isOptional() && !(ArgumentBuilderList.get(i+1).isOptional()))
                 {
-                    String flagtype = ArgumentBuilderList.get(i).isNamed() ? "Named flag " : "Positional Flag ";
-                    throw new Exception("The flag " + ArgumentBuilderList.get(i).getName() + " is an optional flag which occurs before the " + flagtype + ArgumentBuilderList.get(i+1).getName() + " Optional flags must not occur before " + flagtype + " flags");
+                    throw new commandException("The flag " + ArgumentBuilderList.get(i).getName() + " is an optional flag which occurs before the non-optional flag" + ArgumentBuilderList.get(i+1).getName() + " Optional flags must not occur before non-optional flags.");
                 }
                 else if (ArgumentBuilderList.get(i).isNamed() && ArgumentBuilderList.get(i+1).isPositional())
                 {
-                    throw new Exception("The flag " + ArgumentBuilderList.get(i).getName() + " is an named flag which occurs before the positional flag " + ArgumentBuilderList.get(i+1).getName() + " Named flags must not occur before positional flags");
+                    throw new commandException("The flag " + ArgumentBuilderList.get(i).getName() + " is an named flag which occurs before the positional flag " + ArgumentBuilderList.get(i+1).getName() + " Named flags must not occur before positional flags");
 
                 }
             }
             ArgumentList.add(i, ArgumentBuilderList.get(i).build());
+            //Add a bit of line to modify values to keep track of how many values are expected to be given
         }
     }
 
-    public Map<String, Object> parse(String inputString) throws Exception
+    public Map<String, Object> parse(String inputString) throws commandException
     {
-        build();
         var result = new HashMap<String, Object>();
         try
         {
@@ -62,7 +61,7 @@ public class command {
             var entryIterator = args.entrySet().iterator();
             if (args.size() > ArgumentList.size())
             {
-                throw new Exception("The number of arguments is " + args.size() + " but the number of arguments is " + args.size());
+                throw new commandException("The number of arguments is " + args.size() + " but the number of expected arguments is " + ArgumentList.size());
             }
             for (Argument arg : ArgumentList)
             {
@@ -77,17 +76,9 @@ public class command {
                     {
                         result.put(arg.getName(), arg.run((String) entry.getValue()));
                     }
-//                    else if (isNumeric(entry.getKey()) && arg.getArgumentType().name().equals("Optional"))
-//                    {
-//                        result.put(arg.getName(), arg.run((String) entry.getValue()));
-//                    }
-//                    else if (entry.getKey().equals(arg.getName()) && arg.getArgumentType().name().equals("Optional"))
-//                    {
-//                        result.put(arg.getName(), arg.run((String) entry.getValue()));
-//                    }
                     else
                     {
-                        throw new Exception("The argument " + arg.getName() + " is not a valid argument type");
+                        throw new commandException("The flag " + arg.getName() + " is not a valid flag");
                     }
                 }
                 else if (arg.isOptional())
@@ -102,7 +93,7 @@ public class command {
         }
         catch (Exception e)
         {
-            throw new Exception("Error parsing command line arguments: " + e.getMessage());
+            throw new commandException("Error parsing command line arguments: " + e.getMessage());
         }
         return result;
     }
