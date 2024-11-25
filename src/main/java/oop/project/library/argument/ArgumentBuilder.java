@@ -12,13 +12,13 @@ public class ArgumentBuilder<T> {
     private final String name;
     private final Parser<T> parser;
     private final List<Function<T, Boolean>> validators;
-    private ArgumentType argumentType;
+    private Argument.ArgumentType argumentType;
     private boolean optional;
     private T defaultValue;
 
     public ArgumentBuilder(String argumentName, Parser<T> parser) {
         name = argumentName;
-        argumentType = ArgumentType.NOT_SET;
+        argumentType = null;
         validators = new ArrayList<>();
         this.parser = parser;
         this.optional = false;
@@ -30,27 +30,27 @@ public class ArgumentBuilder<T> {
     }
 
     public ArgumentBuilder<T> positional() {
-        argumentType = ArgumentType.POSITIONAL;
+        argumentType = Argument.ArgumentType.Positional;
         return this;
     }
 
     public ArgumentBuilder<T> named() {
-        argumentType = ArgumentType.NAMED;
+        argumentType = Argument.ArgumentType.Named;
         return this;
     }
 
     public boolean isPositional() {
-        if (argumentType.equals(ArgumentType.NOT_SET)) {
-            // TODO throw error
+        if (argumentType == null) {
+            throw new ArgumentException();
         }
-        return argumentType.equals(ArgumentType.POSITIONAL);
+        return argumentType.equals(Argument.ArgumentType.Positional);
     }
 
     public boolean isNamed() {
-        if (argumentType.equals(ArgumentType.NOT_SET)) {
-            // TODO throw error
+        if (argumentType == null) {
+            throw new ArgumentException();
         }
-        return argumentType.equals(ArgumentType.NAMED);
+        return argumentType.equals(Argument.ArgumentType.Named);
     }
 
     public ArgumentBuilder<T> validator(Function<T, Boolean> validator) {
@@ -64,7 +64,6 @@ public class ArgumentBuilder<T> {
     }
 
     public ArgumentBuilder<T> optional() {
-        argumentType = ArgumentType.OPTIONAL;
         optional = true;
         return this;
     }
@@ -83,16 +82,9 @@ public class ArgumentBuilder<T> {
     }
 
     public Argument<T> build() {
-        if (argumentType.equals(ArgumentType.NOT_SET)) {
+        if (argumentType == null) {
             throw new ArgumentException();
         }
-        return new Argument<T>(name, parser, validators, argumentType.name(), defaultValue);
-    }
-
-    private enum ArgumentType {
-        NOT_SET,
-        POSITIONAL,
-        NAMED,
-        OPTIONAL,
+        return new Argument<T>(name, parser, validators, argumentType, defaultValue, optional);
     }
 }
