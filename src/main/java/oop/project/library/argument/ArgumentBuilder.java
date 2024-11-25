@@ -59,7 +59,7 @@ public class ArgumentBuilder<T> {
     }
 
     public ArgumentBuilder<T> choices(T... choices) {
-        validator(t1 -> Arrays.stream(choices).anyMatch(t2 -> t1 == t2));
+        validator(t -> Arrays.asList(choices).contains(t));
         return this;
     }
 

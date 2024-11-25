@@ -159,7 +159,7 @@ public class Scenarios {
 
         try {
             var commandObject = new command("difficulty");
-            commandObject.argument("difficulty", new StringParser()).positional().validator((i) -> i.equals("easy") || i.equals("medium") || i.equals("hard") || i.equals("peaceful"));
+            commandObject.argument("difficulty", new StringParser()).positional().choices("easy", "medium", "hard", "peaceful");
             var argument = commandObject.parse(arguments);
             var difficulty = argument.get("difficulty");
             return new Result.Success<>(Map.of("difficulty", difficulty));
