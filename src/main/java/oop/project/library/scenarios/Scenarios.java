@@ -192,7 +192,7 @@ public class Scenarios {
 
         try {
             var commandObject = new command("echo");
-            commandObject.argument("message", new StringParser()).optional().defaultValue("Echo, echo, echo!");
+            commandObject.argument("message", new StringParser()).optional().positional().defaultValue("Echo, echo, echo!");
             var argument = commandObject.parse(arguments);
             var message = argument.get("message");
             return new Result.Success<>(Map.of("message", message));
@@ -221,7 +221,7 @@ public class Scenarios {
         try {
             var commandObject = new command("search");
             commandObject.argument("term", new StringParser()).positional();
-            commandObject.argument("case-insensitive", new BooleanParser()).optional().defaultValue(false);
+            commandObject.argument("case-insensitive", new BooleanParser()).optional().named().defaultValue(false);
             var argument = commandObject.parse(arguments);
             var term = argument.get("term");
             var caseInsensitive = argument.get("case-insensitive");
@@ -251,19 +251,32 @@ public class Scenarios {
     }
 
     private static Result<Map<String, Object>> weekday(String arguments) {
+
         try {
-            var args = Lexer.parse(arguments);
-            var unparsedDate = (String) args.remove("0");
-            if (unparsedDate == null) {
-                return new Result.Failure<>("Missing arg");
-            }
-            var date = new CustomParser<>(LocalDate::parse).parse(unparsedDate);
-            if (!args.isEmpty()) {
-                return new Result.Failure<>("Missing arg");
-            }
+            var commandObject = new command("weekday");
+            commandObject.argument("date", new CustomParser<>(LocalDate::parse)).positional();
+            var argument = commandObject.parse(arguments);
+            var date = argument.get("date");
             return new Result.Success<>(Map.of("date", date));
         } catch (Exception e) {
             return new Result.Failure<>(e.getMessage());
         }
+
+
+
+//        try {
+//            var args = Lexer.parse(arguments);
+//            var unparsedDate = (String) args.remove("0");
+//            if (unparsedDate == null) {
+//                return new Result.Failure<>("Missing arg");
+//            }
+//            var date = new CustomParser<>(LocalDate::parse).parse(unparsedDate);
+//            if (!args.isEmpty()) {
+//                return new Result.Failure<>("Missing arg");
+//            }
+//            return new Result.Success<>(Map.of("date", date));
+//        } catch (Exception e) {
+//            return new Result.Failure<>(e.getMessage());
+//        }
     }
 }

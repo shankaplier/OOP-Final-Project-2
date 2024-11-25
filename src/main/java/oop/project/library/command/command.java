@@ -77,20 +77,20 @@ public class command {
                     {
                         result.put(arg.getName(), arg.run((String) entry.getValue()));
                     }
-                    else if (isNumeric(entry.getKey()) && arg.getArgumentType().name().equals("Optional"))
-                    {
-                        result.put(arg.getName(), arg.run((String) entry.getValue()));
-                    }
-                    else if (entry.getKey().equals(arg.getName()) && arg.getArgumentType().name().equals("Optional"))
-                    {
-                        result.put(arg.getName(), arg.run((String) entry.getValue()));
-                    }
+//                    else if (isNumeric(entry.getKey()) && arg.getArgumentType().name().equals("Optional"))
+//                    {
+//                        result.put(arg.getName(), arg.run((String) entry.getValue()));
+//                    }
+//                    else if (entry.getKey().equals(arg.getName()) && arg.getArgumentType().name().equals("Optional"))
+//                    {
+//                        result.put(arg.getName(), arg.run((String) entry.getValue()));
+//                    }
                     else
                     {
                         throw new Exception("The argument " + arg.getName() + " is not a valid argument type");
                     }
                 }
-                else if (arg.getArgumentType().name().equals("Optional"))
+                else if (arg.isOptional())
                 {
                     result.put(arg.getName(), arg.getDefaultValue());
                 }
