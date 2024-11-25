@@ -195,7 +195,7 @@ public class Scenarios {
             commandObject.argument("message", new StringParser()).optional().defaultValue("Echo, echo, echo!");
             var argument = commandObject.parse(arguments);
             var message = argument.get("message");
-            return new Result.Success<>(Map.of("echo", message));
+            return new Result.Success<>(Map.of("message", message));
         } catch (Exception e) {
             return new Result.Failure<>(e.getMessage());
         }
@@ -217,22 +217,37 @@ public class Scenarios {
     }
 
     private static Result<Map<String, Object>> search(String arguments) {
+
         try {
-            var args = Lexer.parse(arguments);
-            var unparsedTerm = (String) args.remove("0");
-            var unparsedCase = (String) args.remove("case-insensitive");
-            if (unparsedTerm == null) {
-                return new Result.Failure<>("Missing arg");
-            }
-            var term = new StringParser().parse(unparsedTerm);
-            var caseSensitivity = unparsedCase != null ? new BooleanParser().parse(unparsedCase) : false;
-            if (!args.isEmpty()) {
-                return new Result.Failure<>("Too many args");
-            }
-            return new Result.Success<>(Map.of("term", term, "case-insensitive", caseSensitivity));
+            var commandObject = new command("search");
+            commandObject.argument("term", new StringParser()).positional();
+            commandObject.argument("case-insensitive", new BooleanParser()).optional().defaultValue(false);
+            var argument = commandObject.parse(arguments);
+            var term = argument.get("term");
+            var caseInsensitive = argument.get("case-insensitive");
+            return new Result.Success<>(Map.of("term", term, "case-insensitive", caseInsensitive));
         } catch (Exception e) {
             return new Result.Failure<>(e.getMessage());
         }
+
+
+
+//        try {
+//            var args = Lexer.parse(arguments);
+//            var unparsedTerm = (String) args.remove("0");
+//            var unparsedCase = (String) args.remove("case-insensitive");
+//            if (unparsedTerm == null) {
+//                return new Result.Failure<>("Missing arg");
+//            }
+//            var term = new StringParser().parse(unparsedTerm);
+//            var caseSensitivity = unparsedCase != null ? new BooleanParser().parse(unparsedCase) : false;
+//            if (!args.isEmpty()) {
+//                return new Result.Failure<>("Too many args");
+//            }
+//            return new Result.Success<>(Map.of("term", term, "case-insensitive", caseSensitivity));
+//        } catch (Exception e) {
+//            return new Result.Failure<>(e.getMessage());
+//        }
     }
 
     private static Result<Map<String, Object>> weekday(String arguments) {

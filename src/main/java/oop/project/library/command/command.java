@@ -60,57 +60,45 @@ public class command {
             var args = Lexer.parse(inputString);
 
             var entryIterator = args.entrySet().iterator();
+            if (args.size() > ArgumentList.size())
+            {
+                throw new Exception("The number of arguments is " + args.size() + " but the number of arguments is " + args.size());
+            }
             for (Argument arg : ArgumentList)
             {
                 if (entryIterator.hasNext())
                 {
                     var entry = entryIterator.next();
-                    if (isNumeric(entry.getKey()) && arg.getArgumentType().equals("Positional"))
+                    if (isNumeric(entry.getKey()) && arg.getArgumentType().name().equals("Positional"))
                     {
-                        result.put(arg.getName(), entry.getValue());
+                        result.put(arg.getName(), arg.run((String) entry.getValue()));
                     }
-                    else if (entry.getKey().equals(arg.getName()) && arg.getArgumentType().equals("Named"))
+                    else if (entry.getKey().equals(arg.getName()) && arg.getArgumentType().name().equals("Named"))
                     {
-                        result.put(arg.getName(), entry.getValue());
+                        result.put(arg.getName(), arg.run((String) entry.getValue()));
                     }
-                    else if (entry.getKey().equals(arg.getName()) && arg.getArgumentType().equals("Optional"))
+                    else if (isNumeric(entry.getKey()) && arg.getArgumentType().name().equals("Optional"))
                     {
-                        result.put(arg.getName(), entry.getValue());
+                        result.put(arg.getName(), arg.run((String) entry.getValue()));
+                    }
+                    else if (entry.getKey().equals(arg.getName()) && arg.getArgumentType().name().equals("Optional"))
+                    {
+                        result.put(arg.getName(), arg.run((String) entry.getValue()));
                     }
                     else
                     {
                         throw new Exception("The argument " + arg.getName() + " is not a valid argument type");
                     }
                 }
-                else if (arg.getArgumentType().equals("Optional"))
+                else if (arg.getArgumentType().name().equals("Optional"))
                 {
-                    args.put(arg.getName(), arg.getDefaultValue());
+                    result.put(arg.getName(), arg.getDefaultValue());
                 }
                 else{
                     throw new Exception("The argument " + arg.getName() + " has not been given a value");
                 }
 
             }
-
-            for(String key : args.keySet())
-            {
-                if (isNumeric(key))
-                {
-                    result.put(ArgumentList.get(Integer.parseInt(key)).getName(), ArgumentList.get(Integer.parseInt(key)).run(args.get(key).toString()));
-                }
-                else
-                {
-                    for (Argument arg : ArgumentList)
-                    {
-                        if(arg.getName().equals(key))
-                        {
-                            result.put(key, arg.run(args.get(key).toString()));
-                        }
-                    }
-
-                }
-            }
-
         }
         catch (Exception e)
         {
