@@ -9,7 +9,7 @@ public class CustomParser<T> implements Parser<T> {
     }
 
     @Override
-    public T parse(String input) {
+    public T parse(String input) throws ParseException {
         try {
             return parser.apply(input);
         } catch (Exception e) {

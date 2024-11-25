@@ -41,14 +41,14 @@ public class ArgumentBuilder<T> {
 
     public boolean isPositional() {
         if (argumentType == null) {
-            throw new ArgumentException();
+            throw new ArgumentException("Argument was not positional or named");
         }
         return argumentType.equals(Argument.ArgumentType.Positional);
     }
 
     public boolean isNamed() {
         if (argumentType == null) {
-            throw new ArgumentException();
+            throw new ArgumentException("Argument was not positional or named");
         }
         return argumentType.equals(Argument.ArgumentType.Named);
     }
@@ -83,7 +83,7 @@ public class ArgumentBuilder<T> {
 
     public Argument<T> build() {
         if (argumentType == null) {
-            throw new ArgumentException();
+            throw new ArgumentException("Argument was not positional or named");
         }
         return new Argument<T>(name, parser, validators, argumentType, defaultValue, optional);
     }

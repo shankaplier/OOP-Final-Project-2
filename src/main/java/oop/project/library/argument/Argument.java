@@ -1,5 +1,6 @@
 package oop.project.library.argument;
 
+import oop.project.library.parsing.ParseException;
 import oop.project.library.parsing.Parser;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class Argument<T> {
         this.optional = optional;
     }
 
-    public T run(String input) {
+    public T run(String input) throws ValidateException, ParseException {
         T value = parser.parse(input);
         for (var validator : validators) {
             if (!validator.apply(value)) {
