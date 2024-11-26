@@ -1,12 +1,11 @@
 package oop.project.library.scenarios;
 
+import oop.project.library.command.command;
 import oop.project.library.lexer.Lexer;
 import oop.project.library.parsing.*;
-import oop.project.library.command.command;
 
 import java.time.LocalDate;
 import java.util.Map;
-
 
 
 public class Scenarios {
@@ -64,27 +63,6 @@ public class Scenarios {
         } catch (Exception e) {
             return new Result.Failure<>(e.getMessage());
         }
-
-//        try {
-//            var args = Lexer.parse(arguments);
-//            var unparsedRight = (String) args.remove("1");
-//            var unparsedLeft = (String) args.remove("0");
-//            if (unparsedLeft == null || unparsedRight == null) {
-//                return new Result.Failure<>("Missing arguments");
-//            }
-//            if (!args.isEmpty()) {
-//                return new Result.Failure<>("Too many arguments");
-//            }
-//            try {
-//                var right = new IntegerParser().parse(unparsedRight);
-//                var left = new IntegerParser().parse(unparsedLeft);
-//                return new Result.Success<>(Map.of("left", left, "right", right));
-//            } catch (Exception e) {
-//                return new Result.Failure<>(e.getMessage());
-//            }
-//        } catch (Exception e) {
-//            return new Result.Failure<>(e.getMessage());
-//    }
     }
 
     private static Result<Map<String, Object>> sub(String arguments) {
@@ -101,25 +79,6 @@ public class Scenarios {
         } catch (Exception e) {
             return new Result.Failure<>(e.getMessage());
         }
-
-
-
-//        try {
-//            var args = Lexer.parse(arguments);
-//            var unparsedRight = (String) args.remove("right");
-//            var unparsedLeft = (String) args.remove("left");
-//            if (unparsedLeft == null || unparsedRight == null) {
-//                return new Result.Failure<>("Missing arguments");
-//            }
-//            if (!args.isEmpty()) {
-//                return new Result.Failure<>("Too many arguments");
-//            }
-//            var right = new DoubleParser().parse(unparsedRight);
-//            var left = new DoubleParser().parse(unparsedLeft);
-//            return new Result.Success<>(Map.of("left", left, "right", right));
-//        } catch (Exception e) {
-//            return new Result.Failure<>(e.getMessage());
-//        }
     }
 
     private static Result<Map<String, Object>> fizzbuzz(String arguments) {
@@ -140,22 +99,6 @@ public class Scenarios {
         } catch (Exception e) {
             return new Result.Failure<>(e.getMessage());
         }
-
-
-//        try {
-//            var args = Lexer.parse(arguments);
-//            var unparsedFizz = (String) args.remove("0");
-//            if (unparsedFizz == null) {
-//                return new Result.Failure<>("Missing arg");
-//            }
-//            var fizz = new IntegerParser().parse(unparsedFizz);
-//            if (1 > fizz || fizz > 100) {
-//                return new Result.Failure<>("Out of range");
-//            }
-//            return new Result.Success<>(Map.of("number", fizz));
-//        } catch (Exception e) {
-//            return new Result.Failure<>(e.getMessage());
-//        }
     }
 
     private static Result<Map<String, Object>> difficulty(String arguments) {
@@ -170,26 +113,6 @@ public class Scenarios {
         } catch (Exception e) {
             return new Result.Failure<>(e.getMessage());
         }
-
-
-
-//        try {
-//            var args = Lexer.parse(arguments);
-//            var unparsedDifficulty = (String) args.remove("0");
-//            if (unparsedDifficulty == null) {
-//                return new Result.Failure<>("Missing arg");
-//            }
-//            var difficulty = new StringParser().parse(unparsedDifficulty);
-//            if (!(difficulty.equals("easy") || difficulty.equals("normal") || difficulty.equals("hard") || difficulty.equals("peaceful"))) {
-//                return new Result.Failure<>("Invalid difficulty");
-//            }
-//            if (!args.isEmpty()) {
-//                return new Result.Failure<>("Too many args");
-//            }
-//            return new Result.Success<>(Map.of("difficulty", difficulty));
-//        } catch (Exception e) {
-//            return new Result.Failure<>(e.getMessage());
-//        }
     }
 
     private static Result<Map<String, Object>> echo(String arguments) {
@@ -204,21 +127,6 @@ public class Scenarios {
         } catch (Exception e) {
             return new Result.Failure<>(e.getMessage());
         }
-
-//        try {
-//            var args = Lexer.parse(arguments);
-//            var unparsedMessage = args.remove("0");
-//            if (unparsedMessage == null) {
-//                return new Result.Success<>(Map.of("message", "Echo, echo, echo!"));
-//            }
-//            var message = new StringParser().parse((String) unparsedMessage);
-//            if (!args.isEmpty()) {
-//                return new Result.Failure<>("Too many args");
-//            }
-//            return new Result.Success<>(Map.of("message", message));
-//        } catch (Exception e) {
-//            return new Result.Failure<>(e.getMessage());
-//        }
     }
 
     private static Result<Map<String, Object>> search(String arguments) {
@@ -235,25 +143,6 @@ public class Scenarios {
         } catch (Exception e) {
             return new Result.Failure<>(e.getMessage());
         }
-
-
-
-//        try {
-//            var args = Lexer.parse(arguments);
-//            var unparsedTerm = (String) args.remove("0");
-//            var unparsedCase = (String) args.remove("case-insensitive");
-//            if (unparsedTerm == null) {
-//                return new Result.Failure<>("Missing arg");
-//            }
-//            var term = new StringParser().parse(unparsedTerm);
-//            var caseSensitivity = unparsedCase != null ? new BooleanParser().parse(unparsedCase) : false;
-//            if (!args.isEmpty()) {
-//                return new Result.Failure<>("Too many args");
-//            }
-//            return new Result.Success<>(Map.of("term", term, "case-insensitive", caseSensitivity));
-//        } catch (Exception e) {
-//            return new Result.Failure<>(e.getMessage());
-//        }
     }
 
     private static Result<Map<String, Object>> weekday(String arguments) {
@@ -268,22 +157,5 @@ public class Scenarios {
         } catch (Exception e) {
             return new Result.Failure<>(e.getMessage());
         }
-
-
-
-//        try {
-//            var args = Lexer.parse(arguments);
-//            var unparsedDate = (String) args.remove("0");
-//            if (unparsedDate == null) {
-//                return new Result.Failure<>("Missing arg");
-//            }
-//            var date = new CustomParser<>(LocalDate::parse).parse(unparsedDate);
-//            if (!args.isEmpty()) {
-//                return new Result.Failure<>("Missing arg");
-//            }
-//            return new Result.Success<>(Map.of("date", date));
-//        } catch (Exception e) {
-//            return new Result.Failure<>(e.getMessage());
-//        }
     }
 }
