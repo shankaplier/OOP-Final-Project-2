@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class ArgumentBuilder<T> {
     private final String name;
     private final Parser<T> parser;
-    private final List<Function<T, Boolean>> validators;
+    private final List<Predicate<T>> validators;
     private Argument.ArgumentType argumentType;
     private boolean optional;
     private T defaultValue;
@@ -53,7 +53,7 @@ public class ArgumentBuilder<T> {
         return argumentType.equals(Argument.ArgumentType.Named);
     }
 
-    public ArgumentBuilder<T> validator(Function<T, Boolean> validator) {
+    public ArgumentBuilder<T> validator(Predicate<T> validator) {
         validators.add(validator);
         return this;
     }

@@ -4,16 +4,16 @@ import oop.project.library.parsing.ParseException;
 import oop.project.library.parsing.Parser;
 
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class Argument<T> {
     Parser<T> parser;
-    List<Function<T, Boolean>> validators;
+    List<Predicate<T>> validators;
     String name;
     ArgumentType argumentType;
     boolean optional;
     T defaultValue;
-    public Argument(String name, Parser<T> parser, List<Function<T, Boolean>> validators, ArgumentType argumentType, T defaultValue, boolean optional) {
+    public Argument(String name, Parser<T> parser, List<Predicate<T>> validators, ArgumentType argumentType, T defaultValue, boolean optional) {
         this.parser = parser;
         this.validators = validators;
         this.name = name;
@@ -25,7 +25,7 @@ public class Argument<T> {
     public T run(String input) throws ValidateException, ParseException {
         T value = parser.parse(input);
         for (var validator : validators) {
-            if (!validator.apply(value)) {
+            if (!validator.test(value)) {
                 throw new ValidateException(value + " failed validation for " + name);
             }
         }
