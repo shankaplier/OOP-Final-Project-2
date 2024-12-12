@@ -1,24 +1,23 @@
 package oop.project.library.command;
 
-import com.sun.jdi.connect.Connector;
 import oop.project.library.lexer.Lexer;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 import java.lang.Object;
-import oop.project.library.lexer.Lexer;
+
 import oop.project.library.argument.ArgumentBuilder;
 import oop.project.library.argument.Argument;
 import oop.project.library.parsing.Parser;
 
 
-public class command {
+public class Command {
     String commandName;
     Vector<ArgumentBuilder> ArgumentBuilderList = new Vector<>();
     Vector<Argument>  ArgumentList = new Vector<>();
 
-    public command(String commandName)
+    public Command(String commandName)
     {
         this.commandName = commandName;
     }
@@ -30,7 +29,12 @@ public class command {
         return result;
     }
 
-    public void build() throws Exception
+//    public void build() throws Exception
+//    {
+//
+//    }
+
+    public Map<String, Object> parse(String inputString) throws CommandException
     {
         for (int i = 0; i < ArgumentBuilderList.size(); i++)
         {
@@ -38,21 +42,18 @@ public class command {
             {
                 if (ArgumentBuilderList.get(i).isOptional() && !(ArgumentBuilderList.get(i+1).isOptional()))
                 {
-                    throw new commandException("The flag " + ArgumentBuilderList.get(i).getName() + " is an optional flag which occurs before the non-optional flag" + ArgumentBuilderList.get(i+1).getName() + " Optional flags must not occur before non-optional flags.");
+                    throw new CommandException("The flag " + ArgumentBuilderList.get(i).getName() + " is an optional flag which occurs before the non-optional flag" + ArgumentBuilderList.get(i+1).getName() + " Optional flags must not occur before non-optional flags.");
                 }
                 else if (ArgumentBuilderList.get(i).isNamed() && ArgumentBuilderList.get(i+1).isPositional())
                 {
-                    throw new commandException("The flag " + ArgumentBuilderList.get(i).getName() + " is an named flag which occurs before the positional flag " + ArgumentBuilderList.get(i+1).getName() + " Named flags must not occur before positional flags");
+                    throw new CommandException("The flag " + ArgumentBuilderList.get(i).getName() + " is an named flag which occurs before the positional flag " + ArgumentBuilderList.get(i+1).getName() + " Named flags must not occur before positional flags");
 
                 }
             }
             ArgumentList.add(i, ArgumentBuilderList.get(i).build());
             //Add a bit of line to modify values to keep track of how many values are expected to be given
         }
-    }
 
-    public Map<String, Object> parse(String inputString) throws commandException
-    {
         var result = new HashMap<String, Object>();
         try
         {
@@ -61,24 +62,24 @@ public class command {
             var entryIterator = args.entrySet().iterator();
             if (args.size() > ArgumentList.size())
             {
-                throw new commandException("The number of arguments is " + args.size() + " but the number of expected arguments is " + ArgumentList.size());
+                throw new CommandException("The number of arguments is " + args.size() + " but the number of expected arguments is " + ArgumentList.size());
             }
             for (Argument arg : ArgumentList)
             {
                 if (entryIterator.hasNext())
                 {
                     var entry = entryIterator.next();
-                    if (isNumeric(entry.getKey()) && arg.getArgumentType().name().equals("Positional"))
+                    if (isNumeric(entry.getKey()) && arg.getArgumentType() == Argument.ArgumentType.Positional)
                     {
                         result.put(arg.getName(), arg.run((String) entry.getValue()));
                     }
-                    else if (entry.getKey().equals(arg.getName()) && arg.getArgumentType().name().equals("Named"))
+                    else if (entry.getKey().equals(arg.getName()) && arg.getArgumentType() == Argument.ArgumentType.Named)
                     {
                         result.put(arg.getName(), arg.run((String) entry.getValue()));
                     }
                     else
                     {
-                        throw new commandException("The flag " + arg.getName() + " is not a valid flag");
+                        throw new CommandException("The flag " + arg.getName() + " is not a valid flag");
                     }
                 }
                 else if (arg.isOptional())
@@ -93,7 +94,7 @@ public class command {
         }
         catch (Exception e)
         {
-            throw new commandException("Error parsing command line arguments: " + e.getMessage());
+            throw new CommandException("Error parsing command line arguments: " + e.getMessage());
         }
         return result;
     }

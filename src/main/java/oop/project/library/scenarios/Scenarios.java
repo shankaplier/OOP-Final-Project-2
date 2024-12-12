@@ -1,6 +1,6 @@
 package oop.project.library.scenarios;
 
-import oop.project.library.command.command;
+import oop.project.library.command.Command;
 import oop.project.library.lexer.Lexer;
 import oop.project.library.parsing.*;
 
@@ -36,7 +36,6 @@ public class Scenarios {
         //Note: For ease of testing, this should use your Lexer implementation
         //directly rather and return those values.
         try {
-
             return new Result.Success<>(Lexer.parse(arguments));
         } catch (Exception e) {
             return new Result.Failure<>(e.getMessage());
@@ -52,10 +51,10 @@ public class Scenarios {
         //This is fine - our goal right now is to implement this functionality
         //so we can build up the actual command system in Part 3.
         try {
-            var commandObject = new command("add");
+            var commandObject = new Command("add");
             commandObject.argument("number1", new IntegerParser()).positional();
             commandObject.argument("number2", new IntegerParser()).positional();
-            commandObject.build();
+//            commandObject.build();
             var argument = commandObject.parse(arguments);
             var number1 = argument.get("number1");
             var number2 = argument.get("number2");
@@ -68,10 +67,10 @@ public class Scenarios {
     private static Result<Map<String, Object>> sub(String arguments) {
 
         try {
-            var commandObject = new command("sub");
+            var commandObject = new Command("sub");
             commandObject.argument("left", new DoubleParser()).named();
             commandObject.argument("right", new DoubleParser()).named();
-            commandObject.build();
+//            commandObject.build();
             var argument = commandObject.parse(arguments);
             var number1 = argument.get("left");
             var number2 = argument.get("right");
@@ -90,9 +89,9 @@ public class Scenarios {
         //if (number < 1 || number > 100) ...
 
         try {
-            var commandObject = new command("fizzbuzz");
+            var commandObject = new Command("fizzbuzz");
             commandObject.argument("number", new IntegerParser()).positional().validator((i) -> 1 <= i && i <= 100);
-            commandObject.build();
+//            commandObject.build();
             var argument = commandObject.parse(arguments);
             var number = argument.get("number");
             return new Result.Success<>(Map.of("number", number));
@@ -104,9 +103,9 @@ public class Scenarios {
     private static Result<Map<String, Object>> difficulty(String arguments) {
 
         try {
-            var commandObject = new command("difficulty");
+            var commandObject = new Command("difficulty");
             commandObject.argument("difficulty", new StringParser()).positional().choices("easy", "normal", "hard", "peaceful");
-            commandObject.build();
+//            commandObject.build();
             var argument = commandObject.parse(arguments);
             var difficulty = argument.get("difficulty");
             return new Result.Success<>(Map.of("difficulty", difficulty));
@@ -118,9 +117,9 @@ public class Scenarios {
     private static Result<Map<String, Object>> echo(String arguments) {
 
         try {
-            var commandObject = new command("echo");
+            var commandObject = new Command("echo");
             commandObject.argument("message", new StringParser()).optional().positional().defaultValue("Echo, echo, echo...");
-            commandObject.build();
+//            commandObject.build();
             var argument = commandObject.parse(arguments);
             var message = argument.get("message");
             return new Result.Success<>(Map.of("message", message));
@@ -132,10 +131,10 @@ public class Scenarios {
     private static Result<Map<String, Object>> search(String arguments) {
 
         try {
-            var commandObject = new command("search");
+            var commandObject = new Command("search");
             commandObject.argument("term", new StringParser()).positional();
             commandObject.argument("case-insensitive", new BooleanParser()).optional().named().defaultValue(false);
-            commandObject.build();
+//            commandObject.build();
             var argument = commandObject.parse(arguments);
             var term = argument.get("term");
             var caseInsensitive = argument.get("case-insensitive");
@@ -148,9 +147,9 @@ public class Scenarios {
     private static Result<Map<String, Object>> weekday(String arguments) {
 
         try {
-            var commandObject = new command("weekday");
+            var commandObject = new Command("weekday");
             commandObject.argument("date", new CustomParser<>(LocalDate::parse)).positional();
-            commandObject.build();
+//            commandObject.build();
             var argument = commandObject.parse(arguments);
             var date = argument.get("date");
             return new Result.Success<>(Map.of("date", date));
