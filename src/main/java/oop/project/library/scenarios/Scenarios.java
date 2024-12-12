@@ -105,7 +105,7 @@ public class Scenarios {
 
         try {
             var commandObject = new command("difficulty");
-            commandObject.argument("difficulty", new StringParser()).positional().choices("easy", "medium", "hard", "peaceful");
+            commandObject.argument("difficulty", new StringParser()).positional().choices("easy", "normal", "hard", "peaceful");
             commandObject.build();
             var argument = commandObject.parse(arguments);
             var difficulty = argument.get("difficulty");

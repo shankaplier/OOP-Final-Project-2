@@ -138,6 +138,12 @@ class ScenariosTests {
             Arguments.of("Easy", """
                 difficulty easy
                 """, Map.of("difficulty", "easy")),
+            Arguments.of("Normal", """
+                difficulty normal
+                """, Map.of("difficulty", "normal")),
+            Arguments.of("Medium", """
+                difficulty medium
+                """, null),
             Arguments.of("Hardcore", """
                 difficulty hardcore
                 """, null)
