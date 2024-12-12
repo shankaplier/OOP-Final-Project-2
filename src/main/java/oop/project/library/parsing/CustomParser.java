@@ -12,7 +12,7 @@ public class CustomParser<T> implements Parser<T> {
     public T parse(String input) throws ParseException {
         try {
             return parser.apply(input);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new ParseException(e.getMessage());
         }
     }
