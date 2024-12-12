@@ -1,5 +1,8 @@
 package oop.project.library.parsing;
 
+/**
+ * Parses an Integer from a String
+ */
 public class IntegerParser implements Parser<Integer> {
     public Integer parse(String input) throws ParseException {
         try {
