@@ -160,7 +160,7 @@ class ScenariosTests {
         return Stream.of(
             Arguments.of("Default", """
                 echo
-                """, Map.of("message", "Echo, echo, echo!")),
+                """, Map.of("message", "Echo, echo, echo...")),
             Arguments.of("Message", """
                 echo message
                 """, Map.of("message", "message"))

@@ -119,7 +119,7 @@ public class Scenarios {
 
         try {
             var commandObject = new command("echo");
-            commandObject.argument("message", new StringParser()).optional().positional().defaultValue("Echo, echo, echo!");
+            commandObject.argument("message", new StringParser()).optional().positional().defaultValue("Echo, echo, echo...");
             commandObject.build();
             var argument = commandObject.parse(arguments);
             var message = argument.get("message");
