@@ -1,5 +1,4 @@
 package oop.project.library.lexer;
-import oop.project.library.scenarios.Result;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,30 +15,24 @@ public class Lexer {
     public Map<String, String> NamedArguments = new HashMap<>();
 
     /**
-     *
      * @param input The command line input entered by the user
      */
     public Lexer(String input) throws LexerException {
         int TokenCount = 0;
         String[] tokenList = input.split(" ");
-        if(tokenList[0] == "")
-        {
+        if (tokenList[0] == "") {
             return;
         }
-        for (int i = 0; i < tokenList.length; i++)
-        {
+        for (int i = 0; i < tokenList.length; i++) {
             int numberOfFlags = characterCounter('-', tokenList[i]);
             //If the token contains 3 or more '-'s
-            if(numberOfFlags >= 3)
-            {
+            if (numberOfFlags >= 3) {
                 throw new LexerException("Invalid flag : " + tokenList[i] + " contains more than 2 '-'.");
             }
             //If the token that's being read has 2 '-'s
-            else if (numberOfFlags == 2)
-            {
+            else if (numberOfFlags == 2) {
                 String flagName = tokenList[i].substring(2);
-                if (flagName.isEmpty())
-                {
+                if (flagName.isEmpty()) {
                     throw new LexerException("Invalid argument : The flag is " + tokenList[i] + " is not named. Please name the flag.");
                 }
                 //Check if the token is already in our map of tokens
@@ -56,17 +49,15 @@ public class Lexer {
                     //If the next token is not a flag
                     else if (i < tokenList.length - 1 && characterCounter('-', tokenList[i + 1]) <= 1) {
 
-                        String flagValue = tokenList[i+1];
+                        String flagValue = tokenList[i + 1];
                         //If the token starts with "-" then remove it
                         if (flagValue.startsWith("-")) {
-                            if (!flagValue.matches("-?\\d+.?\\d*"))
-                            {
+                            if (!flagValue.matches("-?\\d+.?\\d*")) {
                                 //Maybe change this
                                 flagValue = flagValue.substring(1);
                             }
                         }
-                        if (flagValue.equals("-"))
-                        {
+                        if (flagValue.equals("-")) {
                             throw new LexerException("The flag " + tokenList[i] + " was not given an argument, Please provide an argument");
                         }
                         NamedArguments.put(flagName, flagValue);
@@ -78,18 +69,15 @@ public class Lexer {
                 }
             }
             //If token starts with "-" or not
-            else
-            {
+            else {
                 String Token = tokenList[i];
                 //If the token starts with "-" then remove it
                 if (Token.startsWith("-")) {
-                    if (!Token.matches("-?\\d+.?\\d*"))
-                    {
+                    if (!Token.matches("-?\\d+.?\\d*")) {
                         Token = Token.substring(1);
                     }
                 }
-                if (Token.equals("-"))
-                {
+                if (Token.equals("-")) {
                     throw new LexerException("Please provide a non empty literal");
                 }
                 PositionalArguments.add(Token);
@@ -100,22 +88,16 @@ public class Lexer {
 
 
     /**
-     *
-     * @param character The character to be searched through a specified text
+     * @param character        The character to be searched through a specified text
      * @param textToBeSearched The text which should be checked for number of occurences of character
      * @return Returns an integer that represents how many times the character appeared in the text
      */
-    private static int characterCounter(Character character, String textToBeSearched)
-    {
+    private static int characterCounter(Character character, String textToBeSearched) {
         int numberOfTimesAppeared = 0;
-        for(int i = 0; i < textToBeSearched.length(); i++)
-        {
-            if (textToBeSearched.charAt(i) == character)
-            {
+        for (int i = 0; i < textToBeSearched.length(); i++) {
+            if (textToBeSearched.charAt(i) == character) {
                 numberOfTimesAppeared++;
-            }
-            else
-            {
+            } else {
                 break;
             }
         }
@@ -123,11 +105,9 @@ public class Lexer {
     }
 
     /**
-     *
      * @return Returns the number of positional and named arguments read by the lexer
      */
-    public int lexedArgumentsLength()
-        {
-            return PositionalArguments.size() + NamedArguments.size();
-        }
+    public int lexedArgumentsLength() {
+        return PositionalArguments.size() + NamedArguments.size();
+    }
 }

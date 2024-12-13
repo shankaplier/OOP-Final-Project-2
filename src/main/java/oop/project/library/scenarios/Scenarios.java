@@ -41,12 +41,10 @@ public class Scenarios {
         try {
             Lexer lexer = new Lexer(arguments);
             Map<String, Object> Result = new HashMap<>();
-            for (int i = 0; i< lexer.PositionalArguments.size(); i++)
-            {
+            for (int i = 0; i < lexer.PositionalArguments.size(); i++) {
                 Result.put(String.valueOf(i), lexer.PositionalArguments.get(i));
             }
-            for (Map.Entry<String, String> entry: lexer.NamedArguments.entrySet())
-            {
+            for (Map.Entry<String, String> entry : lexer.NamedArguments.entrySet()) {
                 Result.put(entry.getKey(), entry.getValue());
             }
             return new Result.Success<>(Result);
@@ -103,7 +101,7 @@ public class Scenarios {
 
         try {
             var commandObject = new Command("fizzbuzz");
-            commandObject.argument("number", new IntegerParser()).positional().range(1,100);
+            commandObject.argument("number", new IntegerParser()).positional().range(1, 100);
 //            commandObject.build();
             var argument = commandObject.parse(arguments);
             var number = argument.get("number");

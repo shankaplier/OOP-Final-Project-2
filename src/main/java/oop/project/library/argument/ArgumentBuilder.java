@@ -83,6 +83,7 @@ public class ArgumentBuilder<T> {
 
     /**
      * Input must be between low and high. It is an error to use this with types that aren't integers.
+     *
      * @param low  minimum allowed value (inclusive)
      * @param high maximum allowed value (inclusive)
      */
