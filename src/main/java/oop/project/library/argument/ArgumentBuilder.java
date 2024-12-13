@@ -57,17 +57,6 @@ public class ArgumentBuilder<T> {
     }
 
     /**
-     * @return Named or Positional
-     * @throws ArgumentException if the argument is neither named nor positional.
-     */
-    public Argument.ArgumentType type() {
-        if (argumentType == null) {
-            throw new ArgumentException(name + " is not set to positional or named");
-        }
-        return this.argumentType;
-    }
-
-    /**
      * @param validator a predicate that any input must pass.
      */
     public ArgumentBuilder<T> validator(Predicate<T> validator) {
@@ -94,6 +83,7 @@ public class ArgumentBuilder<T> {
 
     /**
      * Input must be between low and high. It is an error to use this with types that aren't integers.
+     *
      * @param low  minimum allowed value (inclusive)
      * @param high maximum allowed value (inclusive)
      */
@@ -105,16 +95,10 @@ public class ArgumentBuilder<T> {
     /**
      * @return marks this argument as non-required.
      */
-    public ArgumentBuilder<T> optional() {
+    public ArgumentBuilder<T> optional(T value) {
+        this.defaultValue = value;
         optional = true;
         return this;
-    }
-
-    /**
-     * @return whether the argument is marked as non-required.
-     */
-    public boolean isOptional() {
-        return optional;
     }
 
     /**
@@ -128,7 +112,7 @@ public class ArgumentBuilder<T> {
     /**
      * @return Converts the builder into an Argument.
      */
-    public Argument<T> build() {
+    public Argument<T> build() throws ArgumentException {
         if (argumentType == null) {
             throw new ArgumentException("Argument was not positional or named");
         }
