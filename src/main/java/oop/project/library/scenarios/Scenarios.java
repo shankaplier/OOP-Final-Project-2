@@ -65,10 +65,9 @@ public class Scenarios {
             var commandObject = new Command("add");
             commandObject.argument("number1", new IntegerParser()).positional();
             commandObject.argument("number2", new IntegerParser()).positional();
-//            commandObject.build();
             var argument = commandObject.parse(arguments);
-            var number1 = argument.get("number1");
-            var number2 = argument.get("number2");
+            int number1 = argument.get("number1");
+            int number2 = argument.get("number2");
             return new Result.Success<>(Map.of("left", number1, "right", number2));
         } catch (CommandException e) {
             return new Result.Failure<>(e.getMessage());
@@ -81,10 +80,9 @@ public class Scenarios {
             var commandObject = new Command("sub");
             commandObject.argument("left", new DoubleParser()).named();
             commandObject.argument("right", new DoubleParser()).named();
-//            commandObject.build();
             var argument = commandObject.parse(arguments);
-            var number1 = argument.get("left");
-            var number2 = argument.get("right");
+            double number1 = argument.get("left");
+            double number2 = argument.get("right");
             return new Result.Success<>(Map.of("left", number1, "right", number2));
         } catch (CommandException e) {
             return new Result.Failure<>(e.getMessage());
@@ -102,9 +100,8 @@ public class Scenarios {
         try {
             var commandObject = new Command("fizzbuzz");
             commandObject.argument("number", new IntegerParser()).positional().range(1, 100);
-//            commandObject.build();
             var argument = commandObject.parse(arguments);
-            var number = argument.get("number");
+            int number = argument.get("number");
             return new Result.Success<>(Map.of("number", number));
         } catch (CommandException e) {
             return new Result.Failure<>(e.getMessage());
@@ -116,9 +113,8 @@ public class Scenarios {
         try {
             var commandObject = new Command("difficulty");
             commandObject.argument("difficulty", new StringParser()).positional().choices("easy", "normal", "hard", "peaceful");
-//            commandObject.build();
             var argument = commandObject.parse(arguments);
-            var difficulty = argument.get("difficulty");
+            String difficulty = argument.get("difficulty");
             return new Result.Success<>(Map.of("difficulty", difficulty));
         } catch (CommandException e) {
             return new Result.Failure<>(e.getMessage());
@@ -129,10 +125,9 @@ public class Scenarios {
 
         try {
             var commandObject = new Command("echo");
-            commandObject.argument("message", new StringParser()).optional().positional().defaultValue("Echo, echo, echo...");
-//            commandObject.build();
+            commandObject.argument("message", new StringParser()).optional("Echo, echo, echo...").positional();
             var argument = commandObject.parse(arguments);
-            var message = argument.get("message");
+            String message = argument.get("message");
             return new Result.Success<>(Map.of("message", message));
         } catch (CommandException e) {
             return new Result.Failure<>(e.getMessage());
@@ -144,8 +139,7 @@ public class Scenarios {
         try {
             var commandObject = new Command("search");
             commandObject.argument("term", new StringParser()).positional();
-            commandObject.argument("case-insensitive", new BooleanParser()).optional().named().defaultValue(false);
-//            commandObject.build();
+            commandObject.argument("case-insensitive", new BooleanParser()).optional(false).named();
             var argument = commandObject.parse(arguments);
             var term = argument.get("term");
             var caseInsensitive = argument.get("case-insensitive");
@@ -160,7 +154,6 @@ public class Scenarios {
         try {
             var commandObject = new Command("weekday");
             commandObject.argument("date", new CustomParser<>(LocalDate::parse)).positional();
-//            commandObject.build();
             var argument = commandObject.parse(arguments);
             var date = argument.get("date");
             return new Result.Success<>(Map.of("date", date));

@@ -95,16 +95,10 @@ public class ArgumentBuilder<T> {
     /**
      * @return marks this argument as non-required.
      */
-    public ArgumentBuilder<T> optional() {
+    public ArgumentBuilder<T> optional(T value) {
+        this.defaultValue = value;
         optional = true;
         return this;
-    }
-
-    /**
-     * @return whether the argument is marked as non-required.
-     */
-    public boolean isOptional() {
-        return optional;
     }
 
     /**

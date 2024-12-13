@@ -44,7 +44,7 @@ public class Command {
      * @return Returns a Formatted map that represents what the user entered in the command line
      * @throws CommandException Throws a command exception error if invalid input was entered
      */
-    public Map<String, Object> parse(String inputString) throws CommandException {
+    public Arguments parse(String inputString) throws CommandException {
         try {
             Lexer lexer = new Lexer(inputString);
 
@@ -98,7 +98,7 @@ public class Command {
             if (!lexer.NamedArguments.isEmpty() || !lexer.PositionalArguments.isEmpty()) {
                 throw new CommandException("Too many arguments");
             }
-            return result;
+            return new Arguments(result);
         } catch (ParseException e) {
             throw new CommandException("ParseException: " + e.getMessage());
         } catch (ValidateException e) {
