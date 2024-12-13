@@ -102,7 +102,6 @@ public class Scenarios {
         try {
             var commandObject = new Command("fizzbuzz");
             commandObject.argument("number", new IntegerParser()).positional().range(1,100);
-//            commandObject.build();
             var argument = commandObject.parse(arguments);
             var number = argument.get("number");
             return new Result.Success<>(Map.of("number", number));
@@ -116,7 +115,6 @@ public class Scenarios {
         try {
             var commandObject = new Command("difficulty");
             commandObject.argument("difficulty", new StringParser()).positional().choices("easy", "normal", "hard", "peaceful");
-//            commandObject.build();
             var argument = commandObject.parse(arguments);
             var difficulty = argument.get("difficulty");
             return new Result.Success<>(Map.of("difficulty", difficulty));
@@ -130,7 +128,6 @@ public class Scenarios {
         try {
             var commandObject = new Command("echo");
             commandObject.argument("message", new StringParser()).optional().positional().defaultValue("Echo, echo, echo...");
-//            commandObject.build();
             var argument = commandObject.parse(arguments);
             var message = argument.get("message");
             return new Result.Success<>(Map.of("message", message));
