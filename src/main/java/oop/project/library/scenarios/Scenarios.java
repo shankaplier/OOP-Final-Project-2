@@ -5,6 +5,7 @@ import oop.project.library.lexer.Lexer;
 import oop.project.library.parsing.*;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -36,7 +37,17 @@ public class Scenarios {
         //Note: For ease of testing, this should use your Lexer implementation
         //directly rather and return those values.
         try {
-            return new Result.Success<>(Lexer.parse(arguments));
+            Lexer lexer = new Lexer(arguments);
+            Map<String, Object> Result = new HashMap<>();
+            for (int i = 0; i< lexer.PositionalArguments.size(); i++)
+            {
+                Result.put(String.valueOf(i), lexer.PositionalArguments.get(i));
+            }
+            for (Map.Entry<String, String> entry: lexer.NamedArguments.entrySet())
+            {
+                Result.put(entry.getKey(), entry.getValue());
+            }
+            return new Result.Success<>(Result);
         } catch (Exception e) {
             return new Result.Failure<>(e.getMessage());
         }

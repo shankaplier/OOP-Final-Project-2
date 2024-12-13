@@ -1,5 +1,6 @@
 package oop.project.library.command;
 
+import oop.project.library.argument.ValidateException;
 import oop.project.library.lexer.Lexer;
 
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.lang.Object;
 
 import oop.project.library.argument.ArgumentBuilder;
 import oop.project.library.argument.Argument;
+import oop.project.library.parsing.ParseException;
 import oop.project.library.parsing.Parser;
 
 
@@ -36,67 +38,78 @@ public class Command {
 
     public Map<String, Object> parse(String inputString) throws CommandException
     {
-        for (int i = 0; i < ArgumentBuilderList.size(); i++)
+        Lexer lexer = new Lexer(inputString);
+
+        //more arguments than expected were entered throw an error
+        if (lexer.lexedArgumentsLength() > ArgumentBuilderList.size())
         {
-            if (i+1 < ArgumentBuilderList.size())
-            {
-                if (ArgumentBuilderList.get(i).isOptional() && !(ArgumentBuilderList.get(i+1).isOptional()))
-                {
-                    throw new CommandException("The flag " + ArgumentBuilderList.get(i).getName() + " is an optional flag which occurs before the non-optional flag" + ArgumentBuilderList.get(i+1).getName() + " Optional flags must not occur before non-optional flags.");
-                }
-                else if (ArgumentBuilderList.get(i).isNamed() && ArgumentBuilderList.get(i+1).isPositional())
-                {
-                    throw new CommandException("The flag " + ArgumentBuilderList.get(i).getName() + " is an named flag which occurs before the positional flag " + ArgumentBuilderList.get(i+1).getName() + " Named flags must not occur before positional flags");
-
-                }
-            }
-            ArgumentList.add(i, ArgumentBuilderList.get(i).build());
-            //Add a bit of line to modify values to keep track of how many values are expected to be given
+            throw new CommandException("The number of arguments is " + lexer.lexedArgumentsLength() + " but the number of expected arguments is " + ArgumentList.size());
         }
+        Map<String, Object> result = new HashMap<>();
 
-        var result = new HashMap<String, Object>();
+
+        boolean optional = false;
         try
         {
-            var args = Lexer.parse(inputString);
-
-            var entryIterator = args.entrySet().iterator();
-            if (args.size() > ArgumentList.size())
+            for (var arg: ArgumentBuilderList)
             {
-                throw new CommandException("The number of arguments is " + args.size() + " but the number of expected arguments is " + ArgumentList.size());
-            }
-            for (Argument arg : ArgumentList)
-            {
-                if (entryIterator.hasNext())
+                var current_arg = arg.build();
+                if (current_arg.getArgumentType() == Argument.ArgumentType.Positional)
                 {
-                    var entry = entryIterator.next();
-                    if (isNumeric(entry.getKey()) && arg.getArgumentType() == Argument.ArgumentType.Positional)
+                    //Check if the Positional List is not empty
+                    if (!lexer.PositionalArguments.isEmpty())
                     {
-                        result.put(arg.getName(), arg.run((String) entry.getValue()));
+                        String positionalValue = lexer.PositionalArguments.removeFirst();
+                        result.put(current_arg.getName(), current_arg.run(positionalValue));
+                        ArgumentList.add(current_arg);
                     }
-                    else if (entry.getKey().equals(arg.getName()) && arg.getArgumentType() == Argument.ArgumentType.Named)
+                    else if (current_arg.isOptional())
                     {
-                        result.put(arg.getName(), arg.run((String) entry.getValue()));
+                        optional = true;
+                        result.put(current_arg.getName(), current_arg.getDefaultValue());
+                        ArgumentList.add(current_arg);
                     }
-                    else
+                    else if (optional)
                     {
-                        throw new CommandException("The flag " + arg.getName() + " is not a valid flag");
+                        //Make this better
+                        throw new CommandException("Required arguments not allowed after Optional Arguments");
                     }
                 }
-                else if (arg.isOptional())
+                else if (current_arg.getArgumentType() == Argument.ArgumentType.Named)
                 {
-                    result.put(arg.getName(), arg.getDefaultValue());
-                }
-                else{
-                    throw new Exception("The argument " + arg.getName() + " has not been given a value");
+                    if (!lexer.PositionalArguments.isEmpty())
+                    {
+                        throw new CommandException("Positional Arguments was entered in the place of an optional argument");
+                    }
+                    //Check if the Named List is not empty
+                    if (!lexer.NamedArguments.isEmpty())
+                    {
+                        var removedValue = lexer.NamedArguments.remove(current_arg.getName());
+                        result.put(current_arg.getName(), current_arg.run(removedValue));
+                        ArgumentList.add(current_arg);
+                    }
+                    //If the list is empty it might be an optional
+                    else if (current_arg.isOptional())
+                    {
+                        optional = true;
+                        result.put(current_arg.getName(), current_arg.getDefaultValue());
+                        ArgumentList.add(current_arg);
+                    }
+                    else if (optional)
+                    {
+                        //Make this better
+                        throw new CommandException("Required arguments not allowed after Optional Arguments");
+                    }
                 }
 
+
             }
+            return result;
+
+    } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        catch (Exception e)
-        {
-            throw new CommandException("Error parsing command line arguments: " + e.getMessage());
-        }
-        return result;
+
     }
 
     private static boolean isNumeric(String strNum) {
