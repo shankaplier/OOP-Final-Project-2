@@ -6,23 +6,7 @@ import oop.project.library.parsing.Parser;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class Argument<T> {
-    Parser<T> parser;
-    List<Validator<T>> validators;
-    String name;
-    ArgumentType argumentType;
-    boolean optional;
-    T defaultValue;
-
-    public Argument(String name, Parser<T> parser, List<Validator<T>> validators, ArgumentType argumentType, T defaultValue, boolean optional) {
-        this.parser = parser;
-        this.validators = validators;
-        this.name = name;
-        this.argumentType = argumentType;
-        this.defaultValue = defaultValue;
-        this.optional = optional;
-    }
-
+public record Argument<T> (Parser<T> parser, List<Validator<T>> validators, String name, ArgumentType argumentType, boolean optional, T defaultValue){
     public T run(String input) throws ValidateException, ParseException {
         T value = parser.parse(input);
         for (var validator : validators) {

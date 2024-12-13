@@ -122,6 +122,6 @@ public class ArgumentBuilder<T> {
         if (argumentType == null) {
             throw new ArgumentException("Argument was not positional or named");
         }
-        return new Argument<T>(name, parser, validators, argumentType, defaultValue, optional);
+        return new Argument<T>(parser, validators, name, argumentType, optional, defaultValue);
     }
 }
