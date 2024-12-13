@@ -1,18 +1,18 @@
 package oop.project.library.command;
 
+import oop.project.library.argument.Argument;
+import oop.project.library.argument.ArgumentBuilder;
 import oop.project.library.argument.ArgumentException;
 import oop.project.library.argument.ValidateException;
 import oop.project.library.lexer.Lexer;
+import oop.project.library.lexer.LexerException;
+import oop.project.library.parsing.ParseException;
+import oop.project.library.parsing.Parser;
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
-import java.lang.Object;
-
-import oop.project.library.argument.ArgumentBuilder;
-import oop.project.library.argument.Argument;
-import oop.project.library.parsing.ParseException;
-import oop.project.library.parsing.Parser;
 
 /**
  * Verifies the input entered by the user against the program
@@ -46,17 +46,14 @@ public class Command {
      * @throws CommandException Throws a command exception error if invalid input was entered
      */
     public Map<String, Object> parse(String inputString) throws CommandException {
-        Lexer lexer = new Lexer(inputString);
-
-        //more arguments than expected were entered throw an error
-//        if (lexer.lexedArgumentsLength() > ArgumentBuilderList.size()) {
-//            throw new CommandException("The number of arguments is " + lexer.lexedArgumentsLength() + " but the number of expected arguments is " + ArgumentList.size());
-//        }
-        Map<String, Object> result = new HashMap<>();
-
-
-        boolean optional = false;
         try {
+            Lexer lexer = new Lexer(inputString);
+
+            //more arguments than expected were entered throw an error
+            Map<String, Object> result = new HashMap<>();
+
+
+            boolean optional = false;
             for (var arg : ArgumentBuilderList) {
                 var current_arg = arg.build();
                 if (current_arg.argumentType() == Argument.ArgumentType.Positional) {
@@ -109,6 +106,8 @@ public class Command {
             throw new CommandException("ValidationException: " + e.getMessage());
         } catch (ArgumentException e) {
             throw new CommandException("ArgumentException: " + e.getMessage());
+        } catch (LexerException e) {
+            throw new CommandException("LexerException: " + e.getMessage());
         }
     }
 }

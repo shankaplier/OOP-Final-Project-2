@@ -7,7 +7,7 @@ public class DoubleParser implements Parser<Double> {
     public Double parse(String input) throws ParseException {
         try {
             return Double.parseDouble(input);
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             throw new ParseException(e.getMessage());
         }
     }

@@ -1,7 +1,9 @@
 package oop.project.library.scenarios;
 
 import oop.project.library.command.Command;
+import oop.project.library.command.CommandException;
 import oop.project.library.lexer.Lexer;
+import oop.project.library.lexer.LexerException;
 import oop.project.library.parsing.*;
 
 import java.time.LocalDate;
@@ -48,7 +50,7 @@ public class Scenarios {
                 Result.put(entry.getKey(), entry.getValue());
             }
             return new Result.Success<>(Result);
-        } catch (Exception e) {
+        } catch (LexerException e) {
             return new Result.Failure<>(e.getMessage());
         }
     }
@@ -70,7 +72,7 @@ public class Scenarios {
             var number1 = argument.get("number1");
             var number2 = argument.get("number2");
             return new Result.Success<>(Map.of("left", number1, "right", number2));
-        } catch (Exception e) {
+        } catch (CommandException e) {
             return new Result.Failure<>(e.getMessage());
         }
     }
@@ -86,7 +88,7 @@ public class Scenarios {
             var number1 = argument.get("left");
             var number2 = argument.get("right");
             return new Result.Success<>(Map.of("left", number1, "right", number2));
-        } catch (Exception e) {
+        } catch (CommandException e) {
             return new Result.Failure<>(e.getMessage());
         }
     }
@@ -106,7 +108,7 @@ public class Scenarios {
             var argument = commandObject.parse(arguments);
             var number = argument.get("number");
             return new Result.Success<>(Map.of("number", number));
-        } catch (Exception e) {
+        } catch (CommandException e) {
             return new Result.Failure<>(e.getMessage());
         }
     }
@@ -120,7 +122,7 @@ public class Scenarios {
             var argument = commandObject.parse(arguments);
             var difficulty = argument.get("difficulty");
             return new Result.Success<>(Map.of("difficulty", difficulty));
-        } catch (Exception e) {
+        } catch (CommandException e) {
             return new Result.Failure<>(e.getMessage());
         }
     }
@@ -134,7 +136,7 @@ public class Scenarios {
             var argument = commandObject.parse(arguments);
             var message = argument.get("message");
             return new Result.Success<>(Map.of("message", message));
-        } catch (Exception e) {
+        } catch (CommandException e) {
             return new Result.Failure<>(e.getMessage());
         }
     }
@@ -150,7 +152,7 @@ public class Scenarios {
             var term = argument.get("term");
             var caseInsensitive = argument.get("case-insensitive");
             return new Result.Success<>(Map.of("term", term, "case-insensitive", caseInsensitive));
-        } catch (Exception e) {
+        } catch (CommandException e) {
             return new Result.Failure<>(e.getMessage());
         }
     }
@@ -164,7 +166,7 @@ public class Scenarios {
             var argument = commandObject.parse(arguments);
             var date = argument.get("date");
             return new Result.Success<>(Map.of("date", date));
-        } catch (Exception e) {
+        } catch (CommandException e) {
             return new Result.Failure<>(e.getMessage());
         }
     }

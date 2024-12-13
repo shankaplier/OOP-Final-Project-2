@@ -19,8 +19,7 @@ public class Lexer {
      *
      * @param input The command line input entered by the user
      */
-    public Lexer(String input)
-    {
+    public Lexer(String input) throws LexerException {
         int TokenCount = 0;
         String[] tokenList = input.split(" ");
         if(tokenList[0] == "")
