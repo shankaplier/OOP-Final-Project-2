@@ -93,6 +93,16 @@ public class ArgumentBuilder<T> {
     }
 
     /**
+     * Input must be between low and high. It is an error to use this with types that aren't integers.
+     * @param low  minimum allowed value (inclusive)
+     * @param high maximum allowed value (inclusive)
+     */
+    public ArgumentBuilder<T> range(int low, int high) {
+        validator("Value was not in range " + low + " to " + high, v -> low <= (int) v && (int) v <= high);
+        return this;
+    }
+
+    /**
      * @return marks this argument as non-required.
      */
     public ArgumentBuilder<T> optional() {
