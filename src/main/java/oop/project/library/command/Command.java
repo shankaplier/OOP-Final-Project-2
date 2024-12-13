@@ -44,7 +44,7 @@ public class Command {
                 {
                     throw new CommandException("The flag " + ArgumentBuilderList.get(i).getName() + " is an optional flag which occurs before the non-optional flag" + ArgumentBuilderList.get(i+1).getName() + " Optional flags must not occur before non-optional flags.");
                 }
-                else if (ArgumentBuilderList.get(i).isNamed() && ArgumentBuilderList.get(i+1).isPositional())
+                else if (ArgumentBuilderList.get(i).type() == Argument.ArgumentType.Named && ArgumentBuilderList.get(i+1).type() == Argument.ArgumentType.Positional)
                 {
                     throw new CommandException("The flag " + ArgumentBuilderList.get(i).getName() + " is an named flag which occurs before the positional flag " + ArgumentBuilderList.get(i+1).getName() + " Named flags must not occur before positional flags");
 
