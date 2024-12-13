@@ -101,7 +101,7 @@ public class Scenarios {
 
         try {
             var commandObject = new Command("fizzbuzz");
-            commandObject.argument("number", new IntegerParser()).positional().validator((i) -> 1 <= i && i <= 100);
+            commandObject.argument("number", new IntegerParser()).positional().range(1,100);
 //            commandObject.build();
             var argument = commandObject.parse(arguments);
             var number = argument.get("number");
