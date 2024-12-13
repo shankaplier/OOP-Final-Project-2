@@ -69,25 +69,25 @@ public class Command {
                 if (entryIterator.hasNext())
                 {
                     var entry = entryIterator.next();
-                    if (isNumeric(entry.getKey()) && arg.getArgumentType() == Argument.ArgumentType.Positional)
+                    if (isNumeric(entry.getKey()) && arg.argumentType() == Argument.ArgumentType.Positional)
                     {
-                        result.put(arg.getName(), arg.run((String) entry.getValue()));
+                        result.put(arg.name(), arg.run((String) entry.getValue()));
                     }
-                    else if (entry.getKey().equals(arg.getName()) && arg.getArgumentType() == Argument.ArgumentType.Named)
+                    else if (entry.getKey().equals(arg.name()) && arg.argumentType() == Argument.ArgumentType.Named)
                     {
-                        result.put(arg.getName(), arg.run((String) entry.getValue()));
+                        result.put(arg.name(), arg.run((String) entry.getValue()));
                     }
                     else
                     {
-                        throw new CommandException("The flag " + arg.getName() + " is not a valid flag");
+                        throw new CommandException("The flag " + arg.name() + " is not a valid flag");
                     }
                 }
-                else if (arg.isOptional())
+                else if (arg.optional())
                 {
-                    result.put(arg.getName(), arg.getDefaultValue());
+                    result.put(arg.name(), arg.defaultValue());
                 }
                 else{
-                    throw new Exception("The argument " + arg.getName() + " has not been given a value");
+                    throw new Exception("The argument " + arg.name() + " has not been given a value");
                 }
 
             }

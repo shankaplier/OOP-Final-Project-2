@@ -16,23 +16,6 @@ public record Argument<T> (Parser<T> parser, List<Validator<T>> validators, Stri
         }
         return value;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public Argument.ArgumentType getArgumentType() {
-        return argumentType;
-    }
-
-    public boolean isOptional() {
-        return optional;
-    }
-
-    public Object getDefaultValue() {
-        return defaultValue;
-    }
-
     public enum ArgumentType {
         Positional,
         Named,
