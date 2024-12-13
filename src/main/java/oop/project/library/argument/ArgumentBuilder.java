@@ -9,19 +9,20 @@ import java.util.function.Predicate;
 
 /**
  * Sets all the configurable fields of an Argument.
+ *
  * @param <T> The type that the Argument will parse.
  */
 public class ArgumentBuilder<T> {
     private final String name;
     private final Parser<T> parser;
-    private final List<Predicate<T>> validators;
+    private final List<Argument.Validator<T>> validators;
     private Argument.ArgumentType argumentType;
     private boolean optional;
     private T defaultValue;
 
     /**
      * @param argumentName The name that will be used to extract the value later.
-     * @param parser Used to convert a String to a T.
+     * @param parser       Used to convert a String to a T.
      */
     public ArgumentBuilder(String argumentName, Parser<T> parser) {
         name = argumentName;
@@ -70,15 +71,24 @@ public class ArgumentBuilder<T> {
      * @param validator a predicate that any input must pass.
      */
     public ArgumentBuilder<T> validator(Predicate<T> validator) {
-        validators.add(validator);
+        return this.validator(null, validator);
+    }
+
+    /**
+     * @param message   This will be included in the error if the predicate fails
+     * @param validator a predicate that any input must pass.
+     */
+    public ArgumentBuilder<T> validator(String message, Predicate<T> validator) {
+        validators.add(new Argument.Validator<>(message, validator));
         return this;
     }
+
 
     /**
      * @param choices the input must be among the values passed to choices.
      */
     public ArgumentBuilder<T> choices(T... choices) {
-        validator(t -> Arrays.asList(choices).contains(t));
+        validator("Invalid choice selected", t -> Arrays.asList(choices).contains(t));
         return this;
     }
 

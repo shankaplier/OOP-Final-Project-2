@@ -8,12 +8,13 @@ import java.util.function.Predicate;
 
 public class Argument<T> {
     Parser<T> parser;
-    List<Predicate<T>> validators;
+    List<Validator<T>> validators;
     String name;
     ArgumentType argumentType;
     boolean optional;
     T defaultValue;
-    public Argument(String name, Parser<T> parser, List<Predicate<T>> validators, ArgumentType argumentType, T defaultValue, boolean optional) {
+
+    public Argument(String name, Parser<T> parser, List<Validator<T>> validators, ArgumentType argumentType, T defaultValue, boolean optional) {
         this.parser = parser;
         this.validators = validators;
         this.name = name;
@@ -25,8 +26,8 @@ public class Argument<T> {
     public T run(String input) throws ValidateException, ParseException {
         T value = parser.parse(input);
         for (var validator : validators) {
-            if (!validator.test(value)) {
-                throw new ValidateException(value + " failed validation for " + name);
+            if (!validator.predicate.test(value)) {
+                throw new ValidateException(value + " failed validation for " + name + (validator.message != null ? ": " + validator.message : "" ));
             }
         }
         return value;
@@ -51,5 +52,8 @@ public class Argument<T> {
     public enum ArgumentType {
         Positional,
         Named,
+    }
+
+    public record Validator<T>(String message, Predicate<T> predicate) {
     }
 }
